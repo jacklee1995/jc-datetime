@@ -23,6 +23,19 @@ yarn add jc-datetime
 
 ## 2.2 秒计数器 Second
 
+```ts
+declare class Second {
+    _value: number;
+    c: Carry;
+    constructor(s: number);
+    next(): void;
+    last(): void;
+    start(func: Function, ...params: any[]): void;
+    print(): void;
+    get_value(): string;
+}
+```
+
 ### 2.2.1 Second 的导入 `Second` 对象
 
 可以通过如下方式来导入
@@ -43,3 +56,97 @@ Second(s: number)
 | start |  |  |
 | print |  |  |
 | get_value |  |  |
+
+### 2.2.4 例子
+
+
+## 2.3 分计数器 Minute
+
+```ts
+declare class Minute {
+    _value: number;
+    c: Carry;
+    second: Second;
+    constructor(m: number, s: number);
+    next(): void;
+    last(): void;
+    next_second(): void;
+    last_second(): void;
+    print(): void;
+    get_value(): string;
+    get_minute(): number;
+    get_second(): number;
+    start(func: Function, ...params: any[]): void;
+}
+```
+
+## 2.4 小时计数器
+
+```ts
+declare class Hour {
+    _value: number;
+    c: Carry;
+    minute: Minute;
+    constructor(time: undefined);
+    constructor(time: string);
+    constructor(time: [number, number, number]);
+    next(): void;
+    last(): void;
+    next_minute(): void;
+    last_minute(): void;
+    next_second(): void;
+    last_second(): void;
+    start(func: Function, ...params: any[]): void;
+    print(): void;
+    get_value(): string;
+    get_hour(): number;
+    get_minute(): number;
+    get_second(): number;
+}
+```
+
+## 2.5 日期器 Date_
+
+```ts
+declare class Date_ {
+    year: number;
+    month: number;
+    day: number;
+    constructor(date: undefined);
+    constructor(date: string);
+    constructor(date: [number, number, number]);
+    _d_check(): void;
+    is_leap_year(): boolean;
+    next(): Date_;
+    last(): Date_;
+    ndays_ago(n: number): Date_;
+    ndays_later(n: number): Date_;
+    ndaylist_next(n: number): Date[];
+    ndaylist_last(n: number): Date[];
+    get_value(): string;
+    print(): string;
+}
+```
+
+## 2.6 期日时间
+
+```ts
+declare class DateTime {
+    date: Date_;
+    time: Hour;
+    constructor(dtm: string);
+    last_second(): void;
+    next_second(): void;
+    last_minute(): void;
+    next_minute(): void;
+    last_hour(): void;
+    next_hour(): void;
+    last_day(): void;
+    next_day(): void;
+    next_month(): void;
+    next_year(): void;
+    start(func: Function, ...params: any[]): void;
+    print(): void;
+    get_value(): string;
+}
+```
