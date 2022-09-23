@@ -1,0 +1,35 @@
+{
+  "name": "jc-datetime",
+  "version": "1.0.1",
+  "description": "A date and time tool.",
+  "main": "index",
+  "scripts": {
+    "build": "tsc src/index.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jacklee1995/jc-datetime.git"
+  },
+  "keywords": [
+    "date",
+    "time",
+    "datetime"
+  ],
+  "author": "jclee95",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/jacklee1995/jc-datetime/issues"
+  },
+  "homepage": "https://github.com/jacklee1995/jc-datetime#readme",
+  "devDependencies": {
+    "@babel/core": "^7.19.1",
+    "babel-cli": "^6.26.0",
+    "babel-core": "^6.26.3",
+    "babel-loader": "^8.2.5",
+    "babel-preset-es2015": "^6.24.1",
+    "babel-register": "^6.26.0",
+    "ts-node": "^10.9.1",
+    "tsc-node": "^0.0.3",
+    "typescript": "^4.8.3"
+  }
+}
