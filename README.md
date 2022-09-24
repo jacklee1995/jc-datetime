@@ -167,22 +167,52 @@ constructor(m:number,s:number)
 ### 2.3.4 `Minute` 对象的方法
 
 #### next 方法
+下一分钟
+```ts
+next():void
+```
 
 #### last 方法
+上一分钟
+```ts
+last():void
+```
 
 #### next_second 方法
+下一秒种
+```ts
+next_second():void
+```
 
 #### last_second 方法
+上一秒种
+```ts
+last_second():void
+```
 
 #### get_value 方法
+获取当前计数值
+```ts
+get_value():string
+```
 
 #### get_minute 方法
-
+获取分钟
+```ts
+get_minute():number
+```
 
 #### get_second 方法
+获取秒种值
+```ts
+get_second():number
+```
 
 #### start 方法
-
+开始计时。
+```ts
+start(func: Function, ...params: any[]):void
+```
 
 ## 2.4 小时计数器 `Hour`
 
