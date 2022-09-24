@@ -79,7 +79,15 @@ Second(s: number)
 ### 2.2.5 例子
 
 ```ts
+let s = new Second(0);
+s.start(()=>{
+    s.print()
+},s)
 ```
+
+![WindowsTerminal_lQoPcNRGaN](https://user-images.githubusercontent.com/65340846/192085744-db30758c-9f5c-4555-a915-fde0fe457e0b.gif)
+
+
 
 ## 2.3 分计数器 `Minute`
 
