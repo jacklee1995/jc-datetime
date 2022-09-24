@@ -379,14 +379,24 @@ for (let i = 1; i <= 12; i++) {
 ### next_day 函数
 
 ```js
-
+let nextday = next_day("2020/02/29");
+console.log(nextday);
+```
+`out[]:`
+```
+2020/03/01
 ```
 
 
 ### last_day 函数
 
 ```js
-
+let lastday = last_day("2020/03/01");
+console.log(lastday);
+```
+`out[]:`
+```
+2020/02/29
 ```
 
 ## 2.8 关于 List 对象的说明
