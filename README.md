@@ -288,7 +288,7 @@ import {
 ### get_days 函数
 
 ```js
-for (let i = 1; i < 12; i++) {
+for (let i = 1; i <= 12; i++) {
     let days = get_days(`2022/${i}`);
     console.log(i<10?`2022/0${i} 有 ${days} 天`:`2022/${i} 有 ${days} 天`);
 } 
@@ -306,6 +306,7 @@ for (let i = 1; i < 12; i++) {
 2022/09 有 30 天
 2022/10 有 31 天
 2022/11 有 30 天
+2022/12 有 31 天
 ```
 
 
@@ -333,9 +334,26 @@ for (let i = 1; i < 12; i++) {
 ### is_big_month 函数
 
 ```js
-
+for (let i = 1; i <= 12; i++) {
+    let isBigMonth = is_big_month(i);
+    console.log(`${i}月是`+(isBigMonth?`大月`:`小月`));
+} 
 ```
-
+`out[]:`
+```
+1月是大月
+2月是小月
+3月是大月
+4月是小月
+5月是大月
+6月是小月
+7月是大月
+8月是大月
+9月是小月
+10月是大月
+11月是小月
+12月是大月
+```
 
 ### get_calendar 函数
 
