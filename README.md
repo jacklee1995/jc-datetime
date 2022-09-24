@@ -242,6 +242,13 @@ import { DateTime } from 'jc-datetime'
 | next_month | 下个月 |
 
 
+### 引入方式
+
+你可以根据需要，参考如下方式进行引入：
+
+```js
+import { get_days, is_leap_year, is_big_month, get_calendar, datelist, next_month } from 'jc-datetime'
+```
 
 ### get_days 函数
 
