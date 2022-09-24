@@ -51,11 +51,11 @@ Second(s: number)
 
 | 方法名 | 描述 | 返回值 |
 |:-|:-|:-|
-| next | 下一秒 | void |
-| last |  | void |
-| start |  |  |
-| print |  |  |
-| get_value |  |  |
+| next | 下一秒 | `void` |
+| last | 上一秒 | `void` |
+| start | 开始计数 | `void` |
+| print | 打印时间 | `void` |
+| get_value | 获取时间值 | `string` |
 
 ### 2.2.4 例子
 
