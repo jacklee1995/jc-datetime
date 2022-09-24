@@ -414,9 +414,13 @@ List(120) [
 ### next_month 函数
 
 ```js
-
+let nextmonth = next_month(2021,12);
+console.log(nextmonth);
 ```
-
+`out[]:`
+```
+2022/01
+```
 
 
 ### next_day 函数
