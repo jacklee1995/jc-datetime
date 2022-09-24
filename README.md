@@ -76,7 +76,25 @@ Second(s: number)
 | **print** | 打印时间 | `void` |
 | **get_value** | 获取时间值 | `string` |
 
-### 2.2.5 例子
+
+#### next 方法
+
+```js
+let s = new Second(59);
+s.print();
+s.next();
+s.print();
+```
+`out[]:`
+```
+59
+00
+```
+
+#### last 方法
+
+
+#### start 方法
 
 ```ts
 let s = new Second(0);
@@ -87,6 +105,9 @@ s.start(()=>{
 
 ![WindowsTerminal_lQoPcNRGaN](https://user-images.githubusercontent.com/65340846/192085744-db30758c-9f5c-4555-a915-fde0fe457e0b.gif)
 
+
+
+#### get_value 方法
 
 
 ## 2.3 分计数器 `Minute`
