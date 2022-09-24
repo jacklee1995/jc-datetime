@@ -160,10 +160,28 @@ constructor(m:number,s:number)
 
 ### 2.3.3 `Minute` 对象的属性
 
+#### 进位标志 c
 
+该标志是一个 Carry 的实例，用于标志。
 
 ### 2.3.4 `Minute` 对象的方法
 
+#### next 方法
+
+#### last 方法
+
+#### next_second 方法
+
+#### last_second 方法
+
+#### get_value 方法
+
+#### get_minute 方法
+
+
+#### get_second 方法
+
+#### start 方法
 
 
 ## 2.4 小时计数器 `Hour`
