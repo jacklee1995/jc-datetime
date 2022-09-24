@@ -93,6 +93,16 @@ s.print();
 
 #### last 方法
 
+```js
+let s = new Second(0);
+s.print();
+s.last();
+s.print();
+```
+```
+00
+59
+```
 
 #### start 方法
 
@@ -109,6 +119,7 @@ s.start(()=>{
 
 #### get_value 方法
 
+该方法返回表示秒值得字符串，如果秒值只有一位，则会被自动补 0。
 
 ## 2.3 分计数器 `Minute`
 
@@ -138,10 +149,14 @@ import { Minute } from 'jc-datetime'
 
 ### 2.3.2 `Minute` 对象的构造器
 
+```js
+constructor(m:number,s:number)
 ```
 
-```
-
+| 参数 | 描述 | 类型 | 默认值 |
+| :- | :- | :- | :- |
+| m | 分 | number | 0 |
+| s | 秒 | number | 0 |
 
 ### 2.3.3 `Minute` 对象的属性
 
