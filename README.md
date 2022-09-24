@@ -288,8 +288,15 @@ import {
 ### get_days 函数
 
 ```js
-
+for (let i = 1; i < 12; i++) {
+    let days = get_days(`2022/0${i}`);
+    console.log(`2022/0${i} 有 ${days} 天`);
+} 
 ```
+
+![image](https://user-images.githubusercontent.com/65340846/192080484-4fbea66a-4db9-4cf0-9a0b-6c9a8ce973f0.png)
+
+
 
 ### is_leap_year 函数
 
@@ -339,5 +346,7 @@ import {
 
 ```
 
+## 2.8 关于 List 对象的说明
 
+在本模块中 List 是一个内部定义的数据容器，它继承于原生 JavaScript 的 Array 对象。一些返回一组值的方法，如 `dartelist()` ，所返回的都不是原生的 JavaScript Array，而是 List。
 
