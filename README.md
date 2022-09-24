@@ -27,10 +27,10 @@ yarn add jc-datetime
 
 | 方法名 | 描述 | 返回值类型 |
 | :- | :- | :- |
-| `set` | 设置进位 | void |
-| `set_back` | 设置退位 | void |
-| `clear` | 清空标志  | void |
-| `get_state` | 获取进位器状态 | number |
+| **set** | 设置进位 | `void` |
+| **set_back** | 设置退位 | `void` |
+| **clear** | 清空标志  | `void` |
+| **get_state** | 获取进位器状态 | `number` |
 
 其中进位器的状态是一个枚举，它有三个枚举值：`CarryEnum.CARRY`、`CarryEnum.NONE`、`CarryEnum.BACK`分别表示 有进位、无进退位、有退位。
 
@@ -63,17 +63,20 @@ import { Second } from 'jc-datetime'
 Second(s: number)
 ```
 
-### 2.2.3 `Second` 对象的方法
+
+### 2.2.3 `Second` 对象的属性
+
+### 2.2.4 `Second` 对象的方法
 
 | 方法名 | 描述 | 返回值 |
 |:-|:-|:-|
-| next | 下一秒 | `void` |
-| last | 上一秒 | `void` |
-| start | 开始计数 | `void` |
-| print | 打印时间 | `void` |
-| get_value | 获取时间值 | `string` |
+| **next** | 下一秒 | `void` |
+| **last** | 上一秒 | `void` |
+| **start** | 开始计数 | `void` |
+| **print** | 打印时间 | `void` |
+| **get_value** | 获取时间值 | `string` |
 
-### 2.2.4 例子
+### 2.2.5 例子
 
 ```ts
 ```
@@ -109,6 +112,15 @@ import { Minute } from 'jc-datetime'
 ```
 
 ```
+
+
+### 2.3.3 `Minute` 对象的属性
+
+
+
+### 2.3.4 `Minute` 对象的方法
+
+
 
 ## 2.4 小时计数器 `Hour`
 
@@ -147,6 +159,12 @@ import { Hour } from 'jc-datetime'
 ```
 
 ```
+
+
+
+### 2.4.3 `Hour` 对象的属性
+
+### 2.4.4 `Hour` 对象的方法
 
 
 ## 2.5 日期器 Date_
@@ -189,6 +207,12 @@ import { Date_ } from 'jc-datetime'
 ```
 
 
+
+### 2.5.3 `Date_` 对象的属性
+
+### 2.5.4 `Date_` 对象的方法
+
+
 ## 2.6 期日时间对象 DateTime
 
 ```ts
@@ -224,6 +248,12 @@ import { DateTime } from 'jc-datetime'
 ```
 
 ```
+
+
+
+### 2.6.3 `DateTime` 对象的属性
+
+### 2.6.4 `DateTime` 对象的方法
 
 
 ## 2.7 独立的函数接口
