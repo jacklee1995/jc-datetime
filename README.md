@@ -167,27 +167,43 @@ constructor(m:number,s:number)
 ### 2.3.4 `Minute` 对象的方法
 
 #### next 方法
-下一分钟
+下一分钟，就地更改当前对象。
 ```ts
 next():void
 ```
+例如：
+```ts
+
+```
 
 #### last 方法
-上一分钟
+上一分钟，就地更改当前对象。
 ```ts
 last():void
 ```
+例如：
+```ts
+
+```
 
 #### next_second 方法
-下一秒种
+下一秒种，就地更改当前对象。
 ```ts
 next_second():void
 ```
+例如：
+```ts
+
+```
 
 #### last_second 方法
-上一秒种
+上一秒种，就地更改当前对象。
 ```ts
 last_second():void
+```
+例如：
+```ts
+
 ```
 
 #### get_value 方法
@@ -195,11 +211,19 @@ last_second():void
 ```ts
 get_value():string
 ```
+例如：
+```ts
+
+```
 
 #### get_minute 方法
 获取分钟
 ```ts
 get_minute():number
+```
+例如：
+```ts
+
 ```
 
 #### get_second 方法
@@ -207,11 +231,19 @@ get_minute():number
 ```ts
 get_second():number
 ```
+例如：
+```ts
+
+```
 
 #### start 方法
 开始计时。
 ```ts
 start(func: Function, ...params: any[]):void
+```
+例如：
+```ts
+
 ```
 
 ## 2.4 小时计数器 `Hour`
