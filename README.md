@@ -234,20 +234,25 @@ import { DateTime } from 'jc-datetime'
 
 |函数|描述|
 |:-|:-|
-| get_days | 获取某个月的天数 |
 | is_leap_year | 是否是闰年 |
 | is_big_month | 是否是大月 |
 | get_calendar | 获取某月日历列表 |
+| get_days | 获取某个月的天数 |
 | datelist | 获取某两个日期间所有日期构成的日期列表 |
 | next_month | 下个月 |
-
+| next_day | 明天（下一天） |
+| last_day | 昨天（上一天） |
 
 ### 引入方式
 
 你可以根据需要，参考如下方式进行引入：
 
 ```js
-import { get_days, is_leap_year, is_big_month, get_calendar, datelist, next_month } from 'jc-datetime'
+import { 
+    is_leap_year, is_big_month, 
+    get_days, get_calendar, datelist, 
+    next_day, last_day, next_month 
+} from 'jc-datetime'
 ```
 
 ### get_days 函数
@@ -291,6 +296,18 @@ import { get_days, is_leap_year, is_big_month, get_calendar, datelist, next_mont
 
 
 
+### next_day 函数
+
+```js
+
+```
+
+
+### last_day 函数
+
+```js
+
+```
 
 
 
