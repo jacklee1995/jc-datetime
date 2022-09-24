@@ -8,6 +8,7 @@ A Javascript/Node datetime tool.
 ```shell
 npm install jc-datetime
 ```
+
 或者使用 yarn 进行安装：
 
 ```shell
@@ -19,7 +20,10 @@ yarn add jc-datetime
 该模块提供了 `Second`, Minute`, Hour`, Date_`, `DateTime` 五个对象，分别可以用于 秒、分、时、日期、日期时间的处理。
 
 ## 2.1 进位器对象
-进位器是一个未直接暴露出来的对象，但是在 `Second`, Minute`, Hour` 中都将其引用为自身的参数。顾名思义，进位器是用以标志是否进位和进位的方式的对象，
+进位器是一个未直接暴露出来的对象，但是在 `Second`, Minute`, Hour` 中都将其引用为自身的参数。顾名思义，进位器是用以标志是否进位和进位的方式的对象，它用于标志当前计数是否已经溢出。溢出有两种形式，一种是正向计数时超出计数器的计数满值，我们将其称之为 **进位**。另一种时反向计数时直到本位为 `0` 后，再一次到达满值时的溢出，我们将其称之为 **退位**。
+
+
+
 
 ## 2.2 秒计数器 Second
 
@@ -36,16 +40,19 @@ declare class Second {
 }
 ```
 
-### 2.2.1 Second 的导入 `Second` 对象
+### 2.2.1 `Second` 的引入
 
-可以通过如下方式来导入
+可以通过如下方式来引入 Second 对象：
+
 ```js
 import { Second } from 'jc-datetime'
 ```
 
 ### 2.2.2 `Second` 对象的构造器
 
+```
 Second(s: number)
+```
 
 ### 2.2.3 `Second` 对象的方法
 
@@ -60,7 +67,7 @@ Second(s: number)
 ### 2.2.4 例子
 
 
-## 2.3 分计数器 Minute
+## 2.3 分计数器 `Minute`
 
 ```ts
 declare class Minute {
@@ -80,7 +87,19 @@ declare class Minute {
 }
 ```
 
-## 2.4 小时计数器
+### 2.3.1 `Minute` 的引入
+
+```js
+import { Minute } from 'jc-datetime'
+```
+
+### 2.3.2 `Minute` 对象的构造器
+
+```
+
+```
+
+## 2.4 小时计数器 `Hour`
 
 ```ts
 declare class Hour {
@@ -105,6 +124,20 @@ declare class Hour {
 }
 ```
 
+### 2.4.1 `Hour` 的引入
+
+```js
+import { Hour } from 'jc-datetime'
+```
+
+
+### 2.4.2 `Hour` 对象的构造器
+
+```
+
+```
+
+
 ## 2.5 日期器 Date_
 
 ```ts
@@ -128,7 +161,22 @@ declare class Date_ {
 }
 ```
 
-## 2.6 期日时间
+### 2.5.1 Date_ 的引入
+
+```js
+import { Date_ } from 'jc-datetime'
+```
+
+
+
+### 2.5.2 `Date_` 对象的构造器
+
+```
+
+```
+
+
+## 2.6 期日时间对象 DateTime
 
 ```ts
 declare class DateTime {
@@ -150,3 +198,20 @@ declare class DateTime {
     get_value(): string;
 }
 ```
+
+### 2.6.1 DateTime 的引入
+
+```js
+import { DateTime } from 'jc-datetime'
+```
+
+
+### 2.6.2 `DateTime` 对象的构造器
+
+```
+
+```
+
+
+
+
