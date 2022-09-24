@@ -151,6 +151,8 @@ import { Hour } from 'jc-datetime'
 
 ## 2.5 日期器 Date_
 
+
+
 ```ts
 declare class Date_ {
     year: number;
@@ -226,7 +228,61 @@ import { DateTime } from 'jc-datetime'
 
 ## 2.7 独立的函数接口
 
-除了上面提到的这几个对象外，本模块还提供了一些独立的函数。他们可以被视作一些小工具，以补充使用
+> v1.03 
+
+除了上面提到的这几个对象外，本模块还提供了一些独立的函数。他们可以被视作一些小工具，以补充功能。
+
+|函数|描述|
+|:-|:-|
+| get_days | 获取某个月的天数 |
+| is_leap_year | 是否是闰年 |
+| is_big_month | 是否是大月 |
+| get_calendar | 获取某月日历列表 |
+| datelist | 获取某两个日期间所有日期构成的日期列表 |
+| next_month | 下个月 |
+
+
+
+### get_days 函数
+
+```js
+
+```
+
+### is_leap_year 函数
+
+```js
+
+```
+
+
+### is_big_month 函数
+
+```js
+
+```
+
+
+### get_calendar 函数
+
+```js
+
+```
+
+
+### datelist 函数
+
+```js
+
+```
+
+### next_month 函数
+
+```js
+
+```
+
+
 
 
 
