@@ -1,11 +1,7 @@
 {
   "name": "jc-datetime",
-  "version": "1.0.1",
+  "version": "1.0.4",
   "description": "A date and time tool.",
-  "main": "index",
-  "scripts": {
-    "build": "tsc src/index.ts"
-  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/jacklee1995/jc-datetime.git"
