@@ -3,6 +3,8 @@
 # jc-datetime
 A Javascript/Node datetime tool.
 
+<b><font color="blue" size="16">目录</font></b>
+
 
 <div id="1"></div>
 
@@ -26,7 +28,9 @@ yarn add jc-datetime
 
 该模块提供了 `Second`, Minute`, Hour`, Date_`, `DateTime` 五个对象，分别可以用于 秒、分、时、日期、日期时间的处理。
 
-## 2.1 进位器对象
+<div id="2-1"></div>
+
+## [2.1 进位器](#2-1)
 
 进位器是一个未直接暴露出来的对象，但是在 `Second`, Minute`, Hour` 中都将其引用为自身的参数。顾名思义，进位器是用以标志是否进位和进位的方式的对象，它用于标志当前计数是否已经溢出。溢出有两种形式，一种是正向计数时超出计数器的计数满值，我们将其称之为 **进位**。另一种时反向计数时直到本位为 `0` 后，再一次到达满值时的溢出，我们将其称之为 **退位**。
 
@@ -41,7 +45,9 @@ yarn add jc-datetime
 
 其中进位器的状态是一个枚举，它有三个枚举值：`CarryEnum.CARRY`、`CarryEnum.NONE`、`CarryEnum.BACK`分别表示 有进位、无进退位、有退位。
 
-## 2.2 秒计数器 Second
+<div id="2-2"></div>
+
+## [2.2 秒计数器 Second](#2-2)
 
 ```ts
 declare class Second {
@@ -133,7 +139,9 @@ s.start(()=>{
 
 该方法返回表示秒值得字符串，如果秒值只有一位，则会被自动补 0。
 
-## 2.3 分计数器 `Minute`
+<div id="2-3"></div>
+
+## [2.3 分计数器 Minute](#2-3)
 
 ```ts
 declare class Minute {
@@ -327,7 +335,9 @@ m.start(()=>{
 },m)
 ```
 
-## 2.4 小时计数器 `Hour`
+<div id="2-4"></div>
+
+## [2.4 小时计数器 Hour](2-4)
 
 ```ts
 declare class Hour {
@@ -378,7 +388,10 @@ constructor(time: [number, number, number])
 ### 2.4.4 `Hour` 对象的方法
 
 
-## 2.5 日期器 Date_
+
+<div id="2-5"></div>
+
+## [2.5 日期器 Date_](#2-5)
 
 
 
@@ -655,7 +668,9 @@ List(9) [
 
 ```
 
-## 2.6 期日时间对象 DateTime
+<div id="2-6"></div>
+
+## [2.6 期日时间对象 DateTime](#2-6)
 
 ```ts
 declare class DateTime {
@@ -792,7 +807,9 @@ dt.print();
 
 
 
-## 2.7 独立的函数接口
+<div id="2-7"></div>
+
+## [2.7 独立的函数接口](#2-7)
 
 > v1.03 
 
@@ -982,7 +999,9 @@ console.log(lastday);
 2020/02/29
 ```
 
-## 2.8 关于 List 对象的说明
+<div id="2-8"></div>
+
+## [2.8 关于 List 对象的说明](#2-8)
 
 在本模块中 List 是一个内部定义的数据容器，它继承于原生 JavaScript 的 Array 对象。一些返回一组值的方法，如 `dartelist()` ，所返回的都不是原生的 JavaScript Array而是 List。
 
