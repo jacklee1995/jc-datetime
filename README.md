@@ -143,7 +143,7 @@ declare class Second {
     /**
      * 获取字符串格式的当前秒计数值
      * @returns 被自动补 '0' 的字符串
-     * @deprecated since v1.0.3, use getter value() instead.
+     * @deprecated since v1.0.6, use getter value() instead.
      */
     get_value(): string;
 }
@@ -272,23 +272,23 @@ declare class Minute {
     /**
      * 设置秒
      * @param {number} seconds Number of seconds.
-     * @since v1.0.3
+     * @since v1.0.6
      */
     set seconds(seconds: number);
     /**
      * 获取秒
-     * @since v1.0.3
+     * @since v1.0.6
      */
     get seconds(): number;
     /**
      * 设置分
      * @param {number} seconds Number of minutes.
-     * @since v1.0.3
+     * @since v1.0.6
      */
     set minutes(minutes: number);
     /**
      * 获取分
-     * @since v1.0.3
+     * @since v1.0.6
      */
     get minutes(): number;
     /**
@@ -308,14 +308,14 @@ declare class Minute {
     get value(): string;
     /**
      * 返回分数值
-     * @deprecated since v1.0.3
+     * @deprecated since v1.0.6
      */
     get_minute(): number;
     get minute(): number;
     set minute(minute: number);
     /**
      * 返回秒数值
-     * @deprecated since v1.0.3
+     * @deprecated since v1.0.6
      */
     get_second(): number;
     get second(): number;
@@ -884,37 +884,37 @@ declare class Date_ {
     ndaylist_last(n: number): Date_[];
     /**
      * 获取 年
-     * @since v1.0.3
+     * @since v1.0.6
      */
     get year(): number;
     /**
      * 设置 年
-     * @since v1.0.3
+     * @since v1.0.6
      */
     set year(year: number);
     /**
      * 获取 月
-     * @since v1.0.3
+     * @since v1.0.6
      */
     get month(): number;
     /**
      * 设置 月
-     * @since v1.0.3
+     * @since v1.0.6
      */
     set month(month: number);
     /**
      * 获取 日
-     * @since v1.0.3
+     * @since v1.0.6
      */
     get day(): number;
     /**
      * 设置 日
-     * @since v1.0.3
+     * @since v1.0.6
      */
     set day(day: number);
     /**
      * 获取日期字符串
-     * @since v1.0.3
+     * @since v1.0.6
      */
     get value(): string;
     /**
@@ -1181,7 +1181,7 @@ List(9) [
 
 #### year
 
-> since v1.0.4
+> since v1.0.6
 
 作为 setter 使用：
 
@@ -1197,7 +1197,7 @@ List(9) [
 
 #### month
 
-> since v1.0.4
+> since v1.0.6
 > 作为 setter 使用：
 
 ```ts
@@ -1212,7 +1212,7 @@ List(9) [
 
 #### day
 
-> since v1.0.4
+> since v1.0.6
 > 作为 setter 使用：
 
 ```ts
@@ -1227,7 +1227,7 @@ List(9) [
 
 #### value
 
-> since v1.0.4
+> since v1.0.6
 > 作为 setter 使用：
 
 ```ts
