@@ -1,6 +1,3 @@
-# jc-datetime
-A Javascript/Node datetime tool.
-
 
 
 # jc-datetime
