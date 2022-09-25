@@ -125,7 +125,7 @@ declare class Second {
     get seconds(): number;
     get value(): string;
     /**
-     * 获取字符串格式的当前秒技术值
+     * 获取字符串格式的当前秒计数值
      * @returns 被自动补 '0' 的字符串
      * @deprecated since v1.0.3, use getter value() instead.
      */
@@ -1197,75 +1197,150 @@ dt.print();
 
 ### [2.6.3 `DateTime` 对象的方法](#2-6-3)
 
-#### to_last_second
-
-上一秒
-
-```ts
-
-```
-
-#### to_next_second
-
-下一秒
+#### [to_last_second: 拨到上一秒](#2-6-3-1)
+例如：
 
 ```ts
-
+let dt = new DateTime("2022/01/01 00:00:00");
+dt.to_last_second();
+dt.print()
+```
+`Out[]:`
+```
+2021/12/31 59:59:59
 ```
 
-#### to_last_minute
+#### [to_next_second: 拨到下一秒](#2-6-3-2)
+例如：
 
 ```ts
-
+let dt = new DateTime("2021/12/31 59:59:59");
+dt.to_next_second();
+dt.print();
+```
+`Out[]:`
+```
+2022/01/01 00:00:00
 ```
 
-#### to_next_minute
 
+#### [to_last_minute: 拨到上一分钟](#2-6-3-3)
+例如：
 ```ts
-
+let dt = new DateTime("2022/01/01 00:00:00");
+dt.to_last_minute();
+dt.print();
+```
+`Out[]:`
+```
+2021/12/31 59:59:00
 ```
 
-#### to_last_hour
-
+#### [to_next_minute: 拨到下一分钟](#2-6-3-4)
+例如：
 ```ts
-
+let dt = new DateTime("2021/12/31 59:59:00");
+dt.to_next_minute();
+dt.print();
+```
+`Out[]:`
+```
+2022/01/01 00:00:00
 ```
 
-#### to_next_hour
-
+#### [to_last_hour:  拨到上一小时](#2-6-3-5)
+例如：
 ```ts
-
+let dt = new DateTime("2022/01/01 00:00:00");
+dt.to_last_hour();
+dt.print();
+```
+`Out[]:`
+```
+2021/12/31 59:00:00
 ```
 
-#### to_last_day
-
+#### [to_next_hour:  拨到下一小时](#2-6-3-6)
+例如：
 ```ts
-
+let dt = new DateTime("2021/12/31 59:00:00");
+dt.to_next_hour();
+dt.print();
+```
+`Out[]:`
+```
+2022/01/01 00:00:00
 ```
 
-#### to_next_day
-
+#### [to_last_day:  拨到上一天](#2-6-3-7)
+例如：
 ```ts
-
+let dt = new DateTime("2020/01/01 00:00:00");
+dt.to_last_day();
+dt.print();
+```
+`Out[]:`
+```
+2019/12/31 00:00:00
 ```
 
-#### to_next_month
-
+#### [to_next_day:  拨到下一天](#2-6-3-8)
+例如：
 ```ts
-
+let dt = new DateTime("2020/02/29 01:02:03");
+dt.to_next_day();
+dt.print();
+```
+`Out[]:`
+```
+2020/03/01 01:02:03
 ```
 
-#### to_next_year
-
+#### [to_next_month: 拨到下个月的这个时候](#2-6-3-9)
+例如：
 ```ts
-
+let dt = new DateTime("2020/01/29 12:06:00");
+dt.to_next_month();
+dt.print();
+```
+`Out[]:`
+```
+2020/02/29 12:06:00
 ```
 
-#### start
-
+再例如
 ```ts
-
+let dt = new DateTime("2020/01/29 12:00:00");
+dt.to_next_month();
+dt.print();
 ```
+`Out[]:`
+```
+2020/03/02 12:00:00
+```
+
+#### [to_next_year: 拨到下一年的这个时候](#2-6-3-10)
+例如：
+```ts
+let dt = new DateTime("2020/01/31 12:06:00");
+dt.to_next_year();
+dt.print();
+```
+`Out[]:`
+```
+2021/01/31 12:06:00
+```
+
+#### [start: 开启计时](#2-6-3-11)
+例如：
+```ts
+let dt = new DateTime("2020/01/01 00:00:00");
+dt.start(()=>{
+    dt.print()
+},dt)
+```
+
+
 
 <div id="2-7"></div>
 
