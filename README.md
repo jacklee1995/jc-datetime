@@ -1,7 +1,11 @@
 # jc-datetime
 A Javascript/Node datetime tool.
 
+<<<<<<< HEAD
 # [1. 安装](#1)
+=======
+# 1. 安装
+>>>>>>> 9260a83767e3672540e285070903eadd88cada93
 
 可以使用 npm 进行安装：
 
@@ -15,7 +19,11 @@ npm install jc-datetime
 yarn add jc-datetime
 ```
 
+<<<<<<< HEAD
 # [2. 使用教程](#2)
+=======
+# 2. 使用教程
+>>>>>>> 9260a83767e3672540e285070903eadd88cada93
 
 该模块提供了 `Second`, Minute`, Hour`, Date_`, `DateTime` 五个对象，分别可以用于 秒、分、时、日期、日期时间的处理。
 
@@ -60,6 +68,7 @@ import { Second } from 'jc-datetime'
 ### 2.2.2 `Second` 对象的构造器
 
 ```
+<<<<<<< HEAD
 Second(s: number=0)
 ```
 
@@ -71,6 +80,13 @@ Second(s: number=0)
 ### 2.2.3 `Second` 对象的属性
 #### 进位标志 c
 该标志是一个 Carry 的实例，用于标志是否进位、退位。
+=======
+Second(s: number)
+```
+
+
+### 2.2.3 `Second` 对象的属性
+>>>>>>> 9260a83767e3672540e285070903eadd88cada93
 
 ### 2.2.4 `Second` 对象的方法
 
@@ -111,7 +127,11 @@ s.print();
 ```
 
 #### start 方法
+<<<<<<< HEAD
 调用 start 方法将启动一个计数器，它每秒使当前 Second 对象实例的计数值增加 1 秒。
+=======
+
+>>>>>>> 9260a83767e3672540e285070903eadd88cada93
 ```ts
 let s = new Second(0);
 s.start(()=>{
@@ -119,7 +139,11 @@ s.start(()=>{
 },s)
 ```
 
+<<<<<<< HEAD
 ![WindowsTerminal_lQoPcNRGaN](https://img-blog.csdnimg.cn/img_convert/35d04d405eb88311ebb99e1946a62a2b.gif)
+=======
+![WindowsTerminal_lQoPcNRGaN](https://user-images.githubusercontent.com/65340846/192085744-db30758c-9f5c-4555-a915-fde0fe457e0b.gif)
+>>>>>>> 9260a83767e3672540e285070903eadd88cada93
 
 
 
@@ -156,7 +180,11 @@ import { Minute } from 'jc-datetime'
 ### 2.3.2 `Minute` 对象的构造器
 
 ```js
+<<<<<<< HEAD
 constructor(m:number=0,s:number=0)
+=======
+constructor(m:number,s:number)
+>>>>>>> 9260a83767e3672540e285070903eadd88cada93
 ```
 
 | 参数 | 描述 | 类型 | 默认值 |
@@ -164,6 +192,7 @@ constructor(m:number=0,s:number=0)
 | m | 分 | number | 0 |
 | s | 秒 | number | 0 |
 
+<<<<<<< HEAD
 如果没有指定任何参数，将默认初始为 0 ，例如：
 ```ts
 let m = new Minute();
@@ -183,11 +212,17 @@ m.print();
 29:59
 ```
 
+=======
+>>>>>>> 9260a83767e3672540e285070903eadd88cada93
 ### 2.3.3 `Minute` 对象的属性
 
 #### 进位标志 c
 
+<<<<<<< HEAD
 该标志是一个 Carry 的实例，用于标志是否进位、退位。
+=======
+该标志是一个 Carry 的实例，用于标志。
+>>>>>>> 9260a83767e3672540e285070903eadd88cada93
 
 ### 2.3.4 `Minute` 对象的方法
 
@@ -198,6 +233,7 @@ next():void
 ```
 例如：
 ```ts
+<<<<<<< HEAD
 let m = new Minute(58,0);
 m.print();
 m.next();
@@ -210,6 +246,9 @@ m.print();
 58:00
 59:00
 00:00
+=======
+
+>>>>>>> 9260a83767e3672540e285070903eadd88cada93
 ```
 
 #### last 方法
@@ -219,6 +258,7 @@ last():void
 ```
 例如：
 ```ts
+<<<<<<< HEAD
 let m = new Minute(0,0);
 m.print();
 m.last();
@@ -228,6 +268,9 @@ m.print();
 ```
 00:00
 59:00
+=======
+
+>>>>>>> 9260a83767e3672540e285070903eadd88cada93
 ```
 
 #### next_second 方法
@@ -237,6 +280,7 @@ next_second():void
 ```
 例如：
 ```ts
+<<<<<<< HEAD
 let m = new Minute(0,0);
 m.next_second();
 m.print();
@@ -244,6 +288,9 @@ m.print();
 `Out[]:`
 ```
 00:01
+=======
+
+>>>>>>> 9260a83767e3672540e285070903eadd88cada93
 ```
 
 #### last_second 方法
@@ -253,6 +300,7 @@ last_second():void
 ```
 例如：
 ```ts
+<<<<<<< HEAD
 let m = new Minute(0,0);
 m.last_second();
 m.print();
@@ -260,6 +308,9 @@ m.print();
 `Out[]:`
 ```
 59:59
+=======
+
+>>>>>>> 9260a83767e3672540e285070903eadd88cada93
 ```
 
 #### get_value 方法
@@ -269,6 +320,7 @@ get_value():string
 ```
 例如：
 ```ts
+<<<<<<< HEAD
 let m = new Minute(0,0);
 m.last_second();
 console.log(m.get_value());
@@ -276,6 +328,9 @@ console.log(m.get_value());
 `Out[]:`
 ```
 59:59
+=======
+
+>>>>>>> 9260a83767e3672540e285070903eadd88cada93
 ```
 
 #### get_minute 方法
@@ -285,12 +340,16 @@ get_minute():number
 ```
 例如：
 ```ts
+<<<<<<< HEAD
 let m = new Minute(17, 46);
 console.log(m.get_minute());
 ```
 `Out[]:`
 ```
 17
+=======
+
+>>>>>>> 9260a83767e3672540e285070903eadd88cada93
 ```
 
 #### get_second 方法
@@ -300,12 +359,16 @@ get_second():number
 ```
 例如：
 ```ts
+<<<<<<< HEAD
 let m = new Minute(17, 46);
 console.log(m.get_second());
 ```
 `Out[]:`
 ```
 46
+=======
+
+>>>>>>> 9260a83767e3672540e285070903eadd88cada93
 ```
 
 #### start 方法
@@ -315,10 +378,14 @@ start(func: Function, ...params: any[]):void
 ```
 例如：
 ```ts
+<<<<<<< HEAD
 let m = new Minute(17,46);
 m.start(()=>{
     m.print()
 },m)
+=======
+
+>>>>>>> 9260a83767e3672540e285070903eadd88cada93
 ```
 
 ## 2.4 小时计数器 `Hour`
@@ -355,6 +422,7 @@ import { Hour } from 'jc-datetime'
 
 ### 2.4.2 `Hour` 对象的构造器
 
+<<<<<<< HEAD
 ```js
 constructor(time: undefined);
 constructor(time: string);
@@ -368,6 +436,15 @@ constructor(time: [number, number, number])
 
 该标志是一个 Carry 的实例，用于标志是否进位、退位。
 
+=======
+```
+
+```
+
+
+
+### 2.4.3 `Hour` 对象的属性
+>>>>>>> 9260a83767e3672540e285070903eadd88cada93
 
 ### 2.4.4 `Hour` 对象的方法
 
@@ -407,6 +484,7 @@ import { Date_ } from 'jc-datetime'
 
 ### 2.5.2 `Date_` 对象的构造器
 
+<<<<<<< HEAD
 ```ts
 constructor(param: string);
 constructor(param: []);
@@ -648,11 +726,28 @@ List(9) [
 ```ts
 
 ```
+=======
+```
+
+```
+
+
+
+### 2.5.3 `Date_` 对象的属性
+
+### 2.5.4 `Date_` 对象的方法
+
+>>>>>>> 9260a83767e3672540e285070903eadd88cada93
 
 ## 2.6 期日时间对象 DateTime
 
 ```ts
 declare class DateTime {
+<<<<<<< HEAD
+=======
+    date: Date_;
+    time: Hour;
+>>>>>>> 9260a83767e3672540e285070903eadd88cada93
     constructor(dtm: string);
     last_second(): void;
     next_second(): void;
@@ -679,6 +774,7 @@ import { DateTime } from 'jc-datetime'
 
 ### 2.6.2 `DateTime` 对象的构造器
 
+<<<<<<< HEAD
 ```ts
 constructor(param: []);
 constructor(param:string);
@@ -784,6 +880,17 @@ dt.print();
 
 ```
 
+=======
+```
+
+```
+
+
+
+### 2.6.3 `DateTime` 对象的属性
+
+### 2.6.4 `DateTime` 对象的方法
+>>>>>>> 9260a83767e3672540e285070903eadd88cada93
 
 
 ## 2.7 独立的函数接口
