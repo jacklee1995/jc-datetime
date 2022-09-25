@@ -1,6 +1,6 @@
 {
   "name": "jc-datetime",
-  "version": "1.0.4",
+  "version": "1.0.6",
   "description": "A date and time tool.",
   "repository": {
     "type": "git",
@@ -9,7 +9,8 @@
   "keywords": [
     "date",
     "time",
-    "datetime"
+    "datetime",
+    "jcstudio"
   ],
   "author": "jclee95",
   "license": "MIT",

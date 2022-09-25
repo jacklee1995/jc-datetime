@@ -41,7 +41,6 @@ declare class StaticFuncs {
      */
     static next_month(year: number, month: number): string;
     static datelist(date_begin: string, date_end: string): List;
-    private _zero_fill;
     /**
      * 明天
      * @param yearmonth 表示月份的字符串，形如 `2022/05/26`
@@ -77,11 +76,11 @@ declare class Second {
      */
     constructor(s?: number);
     /**
-     * 正向行走 1 秒（下一秒）
+     * 拨到下一秒
      */
-    next(): void;
-    /**逆向行走 1 秒（上一秒） */
-    last(): void;
+    to_next(): void;
+    /**拨到上一秒 */
+    to_last(): void;
     /**
      * 开始计时
      * @param func 回调函数
@@ -96,7 +95,7 @@ declare class Second {
     /**
      * 获取字符串格式的当前秒技术值
      * @returns 被自动补 '0' 的字符串
-     * @deprecated since v1.0.3, use getter value() instead.
+     * @deprecated since v1.0.4, use getter value() instead.
      */
     get_value(): string;
 }
@@ -129,23 +128,23 @@ declare class Minute {
     /**
      * 设置秒
      * @param {number} seconds Number of seconds.
-     * @since v1.0.3
+     * @since v1.0.4
      */
     set seconds(seconds: number);
     /**
      * 获取秒
-     * @since v1.0.3
+     * @since v1.0.4
      */
     get seconds(): number;
     /**
      * 设置分
      * @param {number} seconds Number of minutes.
-     * @since v1.0.3
+     * @since v1.0.4
      */
     set minutes(minutes: number);
     /**
      * 获取分
-     * @since v1.0.3
+     * @since v1.0.4
      */
     get minutes(): number;
     /**
@@ -165,14 +164,14 @@ declare class Minute {
     get value(): string;
     /**
      * 返回分数值
-     * @deprecated since v1.0.3
+     * @deprecated since v1.0.4
      */
     get_minute(): number;
     get minute(): number;
     set minute(minute: number);
     /**
      * 返回秒数值
-     * @deprecated since v1.0.3
+     * @deprecated since v1.0.4
      */
     get_second(): number;
     get second(): number;
@@ -192,20 +191,21 @@ declare class Hour {
     constructor(time: string);
     constructor(time: []);
     constructor(time: [number, number, number]);
-    /**下一小时，就地修改 */
-    next(): void;
+    private _zero_fill;
+    /**拨到上一秒 */
+    to_last_second(): void;
+    /**拨到下一秒 */
+    to_next_second(): void;
+    /** 拨到上一分钟 */
+    to_last_minute(): void;
+    /** 拨到下一分钟 */
+    to_next_minute(): void;
     /**
-     * 上一小时，就地修改
+     * 拨到上一小时
      */
-    last(): void;
-    /**下一分钟，就地修改 */
-    next_minute(): void;
-    /**上一分钟，就地修改 */
-    last_minute(): void;
-    /**下一秒，就地修改 */
-    next_second(): void;
-    /**上一秒，就地修改 */
-    last_second(): void;
+    to_last(): void;
+    /** 拨到下一小时 */
+    to_next(): void;
     /**设定为本地时间 */
     set_locale_time(): void;
     /**
@@ -227,8 +227,14 @@ declare class Hour {
     /**
      * 返回当前的小时值字符串
      * @returns 被自动补 0 的 `小时:分钟:秒` 字符串
+     * @deprecated since v1.0.5 use getter value() instead.
      */
     get_value(): string;
+    /**
+     * 返回当前的小时值字符串
+     * @since v1.0.5
+     */
+    get value(): string;
     /**
      * 获取小时的数字值
      * @returns 表示当前计数小时的数值
@@ -270,21 +276,32 @@ declare class Date_ {
      */
     constructor(param: [number, number, number]);
     private _d_check;
+    private _zero_fill;
     /**
      * 返回当前年份是否是闰年
      * @returns 一个表示是否是闰年的布尔值
      */
     is_leap_year(): boolean;
     /**
-     * 下一天（明天）
+     * 返回后一天对应的新 Date_ 对象
      * @returns {Date_} 一个新的 Date_ 对象
      */
-    next(): Date_;
+    get next(): Date_;
     /**
-     * 上一天（昨天）
+     * 时间拨到明天
+     * @since v_1.0.5
+     */
+    to_next(): void;
+    /**
+     * 返回前一天对应的新 Date_ 对象
      * @returns {Date_} 一个新的 Date_ 对象
      */
-    last(): Date_;
+    get last(): Date_;
+    /**
+     * 时间拨到昨天
+     * @since v_1.0.5
+     */
+    to_last(): void;
     /**
      * n 天前
      * @param {number} n 天数
@@ -311,37 +328,37 @@ declare class Date_ {
     ndaylist_last(n: number): Date_[];
     /**
      * 获取 年
-     * @since v1.0.3
+     * @since v1.0.4
      */
     get year(): number;
     /**
      * 设置 年
-     * @since v1.0.3
+     * @since v1.0.4
      */
     set year(year: number);
     /**
      * 获取 月
-     * @since v1.0.3
+     * @since v1.0.4
      */
     get month(): number;
     /**
      * 设置 月
-     * @since v1.0.3
+     * @since v1.0.4
      */
     set month(month: number);
     /**
      * 获取 日
-     * @since v1.0.3
+     * @since v1.0.4
      */
     get day(): number;
     /**
      * 设置 日
-     * @since v1.0.3
+     * @since v1.0.4
      */
     set day(day: number);
     /**
      * 获取日期字符串
-     * @since v1.0.3
+     * @since v1.0.4
      */
     get value(): string;
     /**
@@ -351,7 +368,7 @@ declare class Date_ {
      */
     get_value(): string;
     /**打印日期字符串 */
-    print(): string;
+    print(): void;
 }
 /**
  * 日期时间计数器
@@ -378,7 +395,7 @@ declare class DateTime {
      */
     to_last_second(): void;
     /**
-     * 下一秒，就地修改
+     * 拨到下一秒，就地修改
      */
     to_next_second(): void;
     /**
@@ -402,7 +419,7 @@ declare class DateTime {
     /** 返回对应于昨天的 DateTime 对象 */
     get last(): DateTime;
     /** 明天，就地修改 */
-    next_day(): void;
+    to_next_day(): void;
     /** 返回对应于明天的 DateTime 对象 */
     get next(): DateTime;
     /**下月，就地修改 */

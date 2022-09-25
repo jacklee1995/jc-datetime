@@ -147,13 +147,6 @@ var StaticFuncs = /** @class */function () {
         }
         return date_list;
     };
-    StaticFuncs.prototype._zero_fill = function (s) {
-        var _ = "";
-        if (typeof s === "number") {
-            _ = s.toString();
-        }
-        return _.length === 1 ? "0" + s : s;
-    };
     /**
      * 明天
      * @param yearmonth 表示月份的字符串，形如 `2022/05/26`
@@ -305,9 +298,9 @@ var Second = /** @class */function () {
         this._value = parseInt(s.toString());
     }
     /**
-     * 正向行走 1 秒（下一秒）
+     * 拨到下一秒
      */
-    Second.prototype.next = function () {
+    Second.prototype.to_next = function () {
         // 已达 59
         if (this._value >= 59) {
             this._value = 0; // 置空
@@ -316,8 +309,8 @@ var Second = /** @class */function () {
             this._value = this._value + 1;
         }
     };
-    /**逆向行走 1 秒（上一秒） */
-    Second.prototype.last = function () {
+    /**拨到上一秒 */
+    Second.prototype.to_last = function () {
         // 已到 0
         if (this._value <= 0) {
             this._value = 59; // 置满
@@ -342,7 +335,7 @@ var Second = /** @class */function () {
             for (var _i = 0; _i < arguments.length; _i++) {
                 params[_i] = arguments[_i];
             }
-            that.next();
+            that.to_next();
             func.apply(void 0, params);
         }, 1000], params, false));
     };
@@ -378,7 +371,7 @@ var Second = /** @class */function () {
     /**
      * 获取字符串格式的当前秒技术值
      * @returns 被自动补 '0' 的字符串
-     * @deprecated since v1.0.3, use getter value() instead.
+     * @deprecated since v1.0.4, use getter value() instead.
      */
     Second.prototype.get_value = function () {
         var s = this._value.toString();
@@ -447,7 +440,7 @@ var Minute = /** @class */function () {
      */
     Minute.prototype.next_second = function () {
         // 直接调用 Second 类的下一秒
-        this._second.next();
+        this._second.to_next();
         // 判断进位
         if (this._second.c.get_state() === CarryEnum.CARRY) {
             // 先完成进位
@@ -461,7 +454,7 @@ var Minute = /** @class */function () {
      */
     Minute.prototype.last_second = function () {
         // 直接调用 Second 类的上一秒
-        this._second.last();
+        this._second.to_last();
         // 判断退位
         if (this._second.c.get_state() === CarryEnum.BACK) {
             // 先完成退位
@@ -473,7 +466,7 @@ var Minute = /** @class */function () {
     Object.defineProperty(Minute.prototype, "seconds", {
         /**
          * 获取秒
-         * @since v1.0.3
+         * @since v1.0.4
          */
         get: function get() {
             return this._second.seconds;
@@ -481,7 +474,7 @@ var Minute = /** @class */function () {
         /**
          * 设置秒
          * @param {number} seconds Number of seconds.
-         * @since v1.0.3
+         * @since v1.0.4
          */
         set: function set(seconds) {
             this._second.seconds = seconds;
@@ -492,7 +485,7 @@ var Minute = /** @class */function () {
     Object.defineProperty(Minute.prototype, "minutes", {
         /**
          * 获取分
-         * @since v1.0.3
+         * @since v1.0.4
          */
         get: function get() {
             return this._value;
@@ -500,7 +493,7 @@ var Minute = /** @class */function () {
         /**
          * 设置分
          * @param {number} seconds Number of minutes.
-         * @since v1.0.3
+         * @since v1.0.4
          */
         set: function set(minutes) {
             this._value = minutes;
@@ -559,7 +552,7 @@ var Minute = /** @class */function () {
     });
     /**
      * 返回分数值
-     * @deprecated since v1.0.3
+     * @deprecated since v1.0.4
      */
     Minute.prototype.get_minute = function () {
         return this._value;
@@ -576,7 +569,7 @@ var Minute = /** @class */function () {
     });
     /**
      * 返回秒数值
-     * @deprecated since v1.0.3
+     * @deprecated since v1.0.4
      */
     Minute.prototype.get_second = function () {
         return parseInt(this._second.get_value());
@@ -657,27 +650,72 @@ var Hour = /** @class */function () {
                     // 初始化秒位引用对象
                     this.minute = new Minute(minutes, seconds);
                     // 设置小时初值
-                    this._value = minutes;
+                    this._value = hours;
                 } else {
                     this.minute = new Minute(0, 0);
                     var f_param_type = _typeof(time[0]);
                     new ValueError("Type of first param is: " + f_param_type);
                 }
     }
-    /**下一小时，就地修改 */
-    Hour.prototype.next = function () {
-        // 已达 59
-        if (this._value >= 59) {
-            this._value = 0; // 置空
-            this.c.set(); // 标志进位
-        } else {
-            this._value = this._value + 1;
+    Hour.prototype._zero_fill = function (s) {
+        var _ = "";
+        if (typeof s === "number") {
+            _ = s.toString();
+        }
+        return _.length === 1 ? "0" + s : s;
+    };
+    /**拨到上一秒 */
+    Hour.prototype.to_last_second = function () {
+        // 调用分钟上一秒方法
+        this.minute.last_second();
+        // 只需要观察分种是否退位
+        if (this.minute.c._value === CarryEnum.BACK) {
+            // 先求上一小时
+            this.to_last();
+            // 再清空分钟的进位标志
+            this.minute.c.clear();
+        }
+    };
+    /**拨到下一秒 */
+    Hour.prototype.to_next_second = function () {
+        // 掉用分的下一秒方法
+        this.minute.next_second();
+        // 只需要观察分种是否进位
+        if (this.minute.c._value === CarryEnum.CARRY) {
+            // 先进位到小时，即求下一小时
+            this.to_next();
+            // 再清空分钟的进位标志
+            this.minute.c.clear();
+        }
+    };
+    /** 拨到上一分钟 */
+    Hour.prototype.to_last_minute = function () {
+        // 掉用分的上一分钟方法
+        this.minute.last();
+        // 只需要观察分种是否退位
+        if (this.minute.c._value === CarryEnum.BACK) {
+            // 先求上一小时
+            this.to_last();
+            // 再清空分钟的进位标志
+            this.minute.c.clear();
+        }
+    };
+    /** 拨到下一分钟 */
+    Hour.prototype.to_next_minute = function () {
+        // 掉用分的下一分钟方法
+        this.minute.next();
+        // 只需要观察分种是否进位
+        if (this.minute.c._value === CarryEnum.CARRY) {
+            // 先进位到小时，即求下一小时
+            this.to_next();
+            // 再清空分钟的进位标志
+            this.minute.c.clear();
         }
     };
     /**
-     * 上一小时，就地修改
+     * 拨到上一小时
      */
-    Hour.prototype.last = function () {
+    Hour.prototype.to_last = function () {
         // 已到 0
         if (this._value <= 0) {
             this._value = 59; // 置满
@@ -686,52 +724,14 @@ var Hour = /** @class */function () {
             this._value = this._value - 1;
         }
     };
-    /**下一分钟，就地修改 */
-    Hour.prototype.next_minute = function () {
-        // 掉用分的下一分钟方法
-        this.minute.next();
-        // 只需要观察分种是否进位
-        if (this.minute.c._value === CarryEnum.CARRY) {
-            // 先进位到小时，即求下一小时
-            this.next();
-            // 再清空分钟的进位标志
-            this.minute.c.clear();
-        }
-    };
-    /**上一分钟，就地修改 */
-    Hour.prototype.last_minute = function () {
-        // 掉用分的上一分钟方法
-        this.minute.last();
-        // 只需要观察分种是否退位
-        if (this.minute.c._value === CarryEnum.BACK) {
-            // 先求上一小时
-            this.last();
-            // 再清空分钟的进位标志
-            this.minute.c.clear();
-        }
-    };
-    /**下一秒，就地修改 */
-    Hour.prototype.next_second = function () {
-        // 掉用分的下一秒方法
-        this.minute.next_second();
-        // 只需要观察分种是否进位
-        if (this.minute.c._value === CarryEnum.CARRY) {
-            // 先进位到小时，即求下一小时
-            this.next();
-            // 再清空分钟的进位标志
-            this.minute.c.clear();
-        }
-    };
-    /**上一秒，就地修改 */
-    Hour.prototype.last_second = function () {
-        // 调用分钟上一秒方法
-        this.minute.last_second();
-        // 只需要观察分种是否退位
-        if (this.minute.c._value === CarryEnum.BACK) {
-            // 先求上一小时
-            this.last();
-            // 再清空分钟的进位标志
-            this.minute.c.clear();
+    /** 拨到下一小时 */
+    Hour.prototype.to_next = function () {
+        // 已达 59
+        if (this._value >= 59) {
+            this._value = 0; // 置空
+            this.c.set(); // 标志进位
+        } else {
+            this._value = this._value + 1;
         }
     };
     /**设定为本地时间 */
@@ -760,7 +760,7 @@ var Hour = /** @class */function () {
             for (var _i = 0; _i < arguments.length; _i++) {
                 params[_i] = arguments[_i];
             }
-            that.next_second();
+            that.to_next_second();
             func.apply(void 0, params);
         }, 1000], params, false));
     };
@@ -798,20 +798,32 @@ var Hour = /** @class */function () {
      * 打印当前的小时值
      */
     Hour.prototype.print = function () {
-        var temp = this._value.toString() + ":" + this.minute.value.toString() + ":" + this.minute.seconds.toString();
+        var temp = this._zero_fill(this._value) + ":" + this.minute.value;
         console.log(temp);
     };
     /**
      * 返回当前的小时值字符串
      * @returns 被自动补 0 的 `小时:分钟:秒` 字符串
+     * @deprecated since v1.0.5 use getter value() instead.
      */
     Hour.prototype.get_value = function () {
-        var h = this._value.toString();
-        if (h.length === 1) {
-            h = "0" + h;
-        }
-        return h + ":" + this.minute.get_value();
+        return this._zero_fill(this._value) + ":" + this.minute.value;
     };
+    Object.defineProperty(Hour.prototype, "value", {
+        /**
+         * 返回当前的小时值字符串
+         * @since v1.0.5
+         */
+        get: function get() {
+            var h = this._value.toString();
+            if (h.length === 1) {
+                h = "0" + h;
+            }
+            return h + ":" + this.minute.value;
+        },
+        enumerable: false,
+        configurable: true
+    });
     /**
      * 获取小时的数字值
      * @returns 表示当前计数小时的数值
@@ -897,6 +909,13 @@ var Date_ = /** @class */function () {
             new ValueError("Day must be greater than 0.");
         }
     };
+    Date_.prototype._zero_fill = function (s) {
+        var _ = "";
+        if (typeof s === "number") {
+            _ = s.toString();
+        }
+        return _.length === 1 ? "0" + s : s;
+    };
     /**
      * 返回当前年份是否是闰年
      * @returns 一个表示是否是闰年的布尔值
@@ -908,48 +927,118 @@ var Date_ = /** @class */function () {
             return false;
         }
     };
+    Object.defineProperty(Date_.prototype, "next", {
+        /**
+         * 返回后一天对应的新 Date_ 对象
+         * @returns {Date_} 一个新的 Date_ 对象
+         */
+        get: function get() {
+            var yearmonth = this.year.toString() + "/" + this.month.toString();
+            var days = StaticFuncs.get_days(yearmonth);
+            if (this.day < days) {
+                var next_day_3 = this.day + 1;
+                var next_month_4 = this.month;
+                var next_year = this.year;
+                return new Date_([next_year, next_month_4, next_day_3]);
+            } else if (this.day === days) {
+                var next_day_4 = "01";
+                if (this.month < 1) {
+                    new ValueError("An impossible year, which is less than 1.");
+                } else if (this.month < 12) {
+                    var next_month_5 = this.month + 1;
+                    var this_year = this.year;
+                    return new Date_([this_year, next_month_5, parseInt(next_day_4)]);
+                } else if (this.month === 12) {
+                    var next_month_6 = "01";
+                    var next_year = (this.year + 1).toString();
+                    return new Date_([parseInt(next_year), parseInt(next_month_6), parseInt(next_day_4)]);
+                } else {
+                    new ValueError("An impossible year, which is greater than 12.");
+                }
+            } else {
+                new ValueError("An impossible date, which is greater than the number of days in the month.");
+            }
+            return new Date_([0, 13, 32]);
+        },
+        enumerable: false,
+        configurable: true
+    });
     /**
-     * 下一天（明天）
-     * @returns {Date_} 一个新的 Date_ 对象
+     * 时间拨到明天
+     * @since v_1.0.5
      */
-    Date_.prototype.next = function () {
+    Date_.prototype.to_next = function () {
         var yearmonth = this.year.toString() + "/" + this.month.toString();
         var days = StaticFuncs.get_days(yearmonth);
         if (this.day < days) {
-            var next_day_3 = this.day + 1;
-            var next_month_4 = this.month;
-            var next_year = this.year;
-            return new Date_([next_year, next_month_4, next_day_3]);
+            this._day = this.day + 1;
+            this._month = this.month;
+            this._year = this.year;
         } else if (this.day === days) {
-            var next_day_4 = "01";
             if (this.month < 1) {
                 new ValueError("An impossible year, which is less than 1.");
-            } else if (this.month < 12) {
-                var next_month_5 = this.month + 1;
-                var this_year = this.year;
-                return new Date_([this_year, next_month_5, parseInt(next_day_4)]);
+            } else if (this._month < 12) {
+                this._month = this._month + 1;
+                this._day = 1;
             } else if (this.month === 12) {
-                var next_month_6 = "01";
-                var next_year = (this.year + 1).toString();
-                return new Date_([parseInt(next_year), parseInt(next_month_6), parseInt(next_day_4)]);
+                this._year = this.year + 1;
+                this._month = 1;
+                this._day = 1;
             } else {
                 new ValueError("An impossible year, which is greater than 12.");
             }
         } else {
             new ValueError("An impossible date, which is greater than the number of days in the month.");
         }
-        return new Date_([0, 13, 32]);
     };
+    Object.defineProperty(Date_.prototype, "last", {
+        /**
+         * 返回前一天对应的新 Date_ 对象
+         * @returns {Date_} 一个新的 Date_ 对象
+         */
+        get: function get() {
+            if (this.day != 1) {
+                var last_day_4 = (this.day - 1).toString();
+                var last_month = this.month.toString();
+                var last_year = this.year.toString();
+                return new Date_([parseInt(last_year), parseInt(last_month), parseInt(last_day_4)]);
+            }
+            // this.day === 1
+            else {
+                    if (this.month != 1) {
+                        var last_month = (this.month - 1).toString();
+                        if (last_month.length === 1) {
+                            last_month = '0' + last_month;
+                        }
+                        var last_year = this.year.toString();
+                        var yearmonth = last_year + "/" + last_month;
+                        var days = StaticFuncs.get_days(yearmonth);
+                        var last_day_5 = days.toString();
+                        return new Date_([parseInt(last_year), parseInt(last_month), parseInt(last_day_5)]);
+                    }
+                    // this.month === 1
+                    else {
+                            var last_month = "12";
+                            var last_year = (this.year - 1).toString();
+                            var yearmonth = this.year.toString() + "/" + this.month.toString();
+                            var days = StaticFuncs.get_days(yearmonth);
+                            var last_day_6 = days.toString();
+                            return new Date_([parseInt(last_year), parseInt(last_month), parseInt(last_day_6)]);
+                        }
+                }
+        },
+        enumerable: false,
+        configurable: true
+    });
     /**
-     * 上一天（昨天）
-     * @returns {Date_} 一个新的 Date_ 对象
+     * 时间拨到昨天
+     * @since v_1.0.5
      */
-    Date_.prototype.last = function () {
+    Date_.prototype.to_last = function () {
         if (this.day != 1) {
-            var last_day_4 = (this.day - 1).toString();
-            var last_month = this.month.toString();
-            var last_year = this.year.toString();
-            return new Date_([parseInt(last_year), parseInt(last_month), parseInt(last_day_4)]);
+            this._day = this.day - 1;
+            this._month = this.month;
+            this._year = this.year;
         }
         // this.day === 1
         else {
@@ -958,20 +1047,24 @@ var Date_ = /** @class */function () {
                     if (last_month.length === 1) {
                         last_month = '0' + last_month;
                     }
-                    var last_year = this.year.toString();
+                    var last_year = this.year;
                     var yearmonth = last_year + "/" + last_month;
                     var days = StaticFuncs.get_days(yearmonth);
-                    var last_day_5 = days.toString();
-                    return new Date_([parseInt(last_year), parseInt(last_month), parseInt(last_day_5)]);
+                    var last_day_7 = days;
+                    this._year = last_year;
+                    this.month = parseInt(last_month);
+                    this._day = last_day_7;
                 }
                 // this.month === 1
                 else {
                         var last_month = "12";
-                        var last_year = (this.year - 1).toString();
+                        var last_year = this.year - 1;
                         var yearmonth = this.year.toString() + "/" + this.month.toString();
                         var days = StaticFuncs.get_days(yearmonth);
-                        var last_day_6 = days.toString();
-                        return new Date_([parseInt(last_year), parseInt(last_month), parseInt(last_day_6)]);
+                        var last_day_8 = days;
+                        this._year = last_year;
+                        this.month = parseInt(last_month);
+                        this._day = last_day_8;
                     }
             }
     };
@@ -983,7 +1076,7 @@ var Date_ = /** @class */function () {
     Date_.prototype.ndays_ago = function (n) {
         var temp = new Date_([this.year, this.month, this.day]);
         for (var i in (0, utils_1.range)([0, n])) {
-            temp = temp.last();
+            temp = temp.last;
         }
         return temp;
     };
@@ -995,7 +1088,7 @@ var Date_ = /** @class */function () {
     Date_.prototype.ndays_later = function (n) {
         var temp = new Date_([this.year, this.month, this.day]);
         for (var i in (0, utils_1.range)([0, n])) {
-            temp = temp.next();
+            temp = temp.next;
         }
         return temp;
     };
@@ -1009,7 +1102,7 @@ var Date_ = /** @class */function () {
         var temp = new utils_1.List();
         for (var i in (0, utils_1.range)(n)) {
             temp.add(today);
-            today = today.next();
+            today = today.next;
         }
         return temp;
     };
@@ -1023,21 +1116,21 @@ var Date_ = /** @class */function () {
         var temp = new utils_1.List();
         for (var i in (0, utils_1.range)(n)) {
             temp.add(today);
-            today = today.last();
+            today = today.last;
         }
         return temp;
     };
     Object.defineProperty(Date_.prototype, "year", {
         /**
          * 获取 年
-         * @since v1.0.3
+         * @since v1.0.4
          */
         get: function get() {
             return this._year;
         },
         /**
          * 设置 年
-         * @since v1.0.3
+         * @since v1.0.4
          */
         set: function set(year) {
             this._year = year;
@@ -1048,14 +1141,14 @@ var Date_ = /** @class */function () {
     Object.defineProperty(Date_.prototype, "month", {
         /**
          * 获取 月
-         * @since v1.0.3
+         * @since v1.0.4
          */
         get: function get() {
             return this._month;
         },
         /**
          * 设置 月
-         * @since v1.0.3
+         * @since v1.0.4
          */
         set: function set(month) {
             this._month = month;
@@ -1066,14 +1159,14 @@ var Date_ = /** @class */function () {
     Object.defineProperty(Date_.prototype, "day", {
         /**
          * 获取 日
-         * @since v1.0.3
+         * @since v1.0.4
          */
         get: function get() {
             return this._day;
         },
         /**
          * 设置 日
-         * @since v1.0.3
+         * @since v1.0.4
          */
         set: function set(day) {
             this._day = day;
@@ -1084,7 +1177,7 @@ var Date_ = /** @class */function () {
     Object.defineProperty(Date_.prototype, "value", {
         /**
          * 获取日期字符串
-         * @since v1.0.3
+         * @since v1.0.4
          */
         get: function get() {
             var m = this.month.toString();
@@ -1106,21 +1199,12 @@ var Date_ = /** @class */function () {
      * @deprecated since v1.03, please use getter value() instead
      */
     Date_.prototype.get_value = function () {
-        var m = this.month.toString();
-        if (m.length === 1) {
-            m = "0" + m;
-        }
-        var d = this.day.toString();
-        if (d.length === 1) {
-            d = "0" + d;
-        }
-        return this.year.toString() + "/" + m + "/" + d;
+        return this.year.toString() + "/" + this._zero_fill(this._month) + "/" + this._zero_fill(this._day);
     };
     /**打印日期字符串 */
     Date_.prototype.print = function () {
-        var temp = this.year.toString() + "/" + this._month.toString() + "/" + this._day.toString();
+        var temp = this.year.toString() + "/" + this._zero_fill(this._month) + "/" + this._zero_fill(this._day);
         console.log(temp);
-        return temp;
     };
     return Date_;
 }();
@@ -1151,22 +1235,22 @@ var DateTime = /** @class */function () {
      * 上一秒，就地修改
      */
     DateTime.prototype.to_last_second = function () {
-        this.time.last_second();
+        this.time.to_last_second();
         // 若产生退位
         if (this.time.c._value === CarryEnum.BACK) {
             // 完成从时间到日期的退位
-            this.date.last();
+            this.date.to_last();
             // 清空退位标志
             this.time.c.clear();
         }
     };
     /**
-     * 下一秒，就地修改
+     * 拨到下一秒，就地修改
      */
     DateTime.prototype.to_next_second = function () {
-        this.time.next_second();
+        this.time.to_next_second();
         if (this.time.c._value === CarryEnum.CARRY) {
-            this.date.next();
+            this.date.to_next();
             this.time.c.clear();
         }
     };
@@ -1174,9 +1258,9 @@ var DateTime = /** @class */function () {
      * 上一分钟，就地修改
      */
     DateTime.prototype.to_last_minute = function () {
-        this.time.last_minute();
+        this.time.to_last_minute();
         if (this.time.c._value === CarryEnum.BACK) {
-            this.date.last();
+            this.date.to_last();
             this.time.c.clear();
         }
     };
@@ -1184,9 +1268,9 @@ var DateTime = /** @class */function () {
      * 下一分钟，就地修改
      */
     DateTime.prototype.to_next_minute = function () {
-        this.time.next_minute();
+        this.time.to_next_minute();
         if (this.time.c._value === CarryEnum.CARRY) {
-            this.date.next();
+            this.date.to_next();
             this.time.c.clear();
         }
     };
@@ -1194,11 +1278,11 @@ var DateTime = /** @class */function () {
      * 上一小时，就地修改
      */
     DateTime.prototype.to_last_hour = function () {
-        this.time.last();
+        this.time.to_last();
         // 若产生退位
         if (this.time.c._value === CarryEnum.BACK) {
             // 完成从时间到日期的退位
-            this.date.last();
+            this.date.to_last();
             // 清空退位标志
             this.time.c.clear();
         }
@@ -1207,32 +1291,32 @@ var DateTime = /** @class */function () {
      * 下一小时，就地修改
      */
     DateTime.prototype.to_next_hour = function () {
-        this.time.next();
+        this.time.to_next();
         if (this.time.c._value === CarryEnum.CARRY) {
-            this.date = this.date.next();
+            this.date.to_next();
             this.time.c.clear();
         }
     };
     /** 昨天，就地修改 */
     DateTime.prototype.to_last_day = function () {
-        this.date = this.date.last();
+        this.date.to_last();
     };
     Object.defineProperty(DateTime.prototype, "last", {
         /** 返回对应于昨天的 DateTime 对象 */
         get: function get() {
-            return new DateTime([this.date.last(), this.time]);
+            return new DateTime([this.date.last, this.time]);
         },
         enumerable: false,
         configurable: true
     });
     /** 明天，就地修改 */
-    DateTime.prototype.next_day = function () {
-        this.date = this.date.next();
+    DateTime.prototype.to_next_day = function () {
+        this.date.to_next();
     };
     Object.defineProperty(DateTime.prototype, "next", {
         /** 返回对应于明天的 DateTime 对象 */
         get: function get() {
-            return new DateTime([this.date.next(), this.time]);
+            return new DateTime([this.date.next, this.time]);
         },
         enumerable: false,
         configurable: true
@@ -1377,6 +1461,32 @@ exports.last_day = last_day;
 // m.start(()=>{
 //     m.print()
 // },m)
+/* 测试 Hour 对象 */
+// let h = new Hour([]);
+// h.print();
+// let h = new Hour("21:25:00");
+// h.print();
+// let h = new Hour([1, 30, 0]);
+// h.print();
+// let h = new Hour("00:00:00");
+// h.to_last_second();
+// h.print();
+// let h = new Hour("59:59:59");
+// h.to_next_second();
+// h.print();
+// let h = new Hour("00:00:00");
+// h.to_last_minute();
+// h.print();
+// let h = new Hour("00:00:00");
+// h.to_last();
+// h.print();
+// let h = new Hour("59:00:00");
+// h.set_locale_time();
+// h.print();
+// let h = new Hour("00:00:00");
+// h.start(()=>{
+//     h.print()
+// },h)
 /* 测试 Date_ 对象 */
 // let d = new Date_("2021/01/01");
 // let nAgo = d.ndays_later(59);
@@ -1385,9 +1495,58 @@ exports.last_day = last_day;
 // let d = new Date_("2020/03/6");
 // let nLextLast = d.ndaylist_last(9);
 // console.log(nLextLast);
+// let d = new Date_("2021/12/31");
+// d.to_next();
+// d.next().print();
+// d.print();
 /* 测试 DateTime 对象 */
 // let dt = new DateTime("2022/05/26 20:59:25");
 // dt.print();
 // let dt = new DateTime("2022/05/26 20:59:25");
-var dt = new DateTime([]);
-dt.print();
+// let dt = new DateTime([])
+// dt.print();
+// 拨到上一秒
+// let dt = new DateTime("2022/01/01 00:00:00");
+// dt.to_last_second();
+// dt.print()
+// 拨到下一秒
+// let dt = new DateTime("2021/12/31 59:59:59");
+// dt.to_next_second();
+// dt.print();
+// 拨到上一分钟
+// let dt = new DateTime("2022/01/01 00:00:00");
+// dt.to_last_minute();
+// dt.print();
+// 拨到下一分钟
+// let dt = new DateTime("2021/12/31 59:59:00");
+// dt.to_next_minute();
+// dt.print();
+// 拨到上一小时
+// let dt = new DateTime("2022/01/01 00:00:00");
+// dt.to_last_hour();
+// dt.print();
+// 拨到下一小时
+// let dt = new DateTime("2021/12/31 59:00:00");
+// dt.to_next_hour();
+// dt.print();
+// 拨到上一天
+// let dt = new DateTime("2020/01/01 00:00:00");
+// dt.to_last_day();
+// dt.print();
+// 拨到下一天
+// let dt = new DateTime("2020/02/29 01:02:03");
+// dt.to_next_day();
+// dt.print();
+// 拨到下个月的这个时候
+// let dt = new DateTime("2020/01/31 12:06:00");
+// dt.to_next_month();
+// dt.print();
+// 拨到下一年的这个时候
+// let dt = new DateTime("2020/01/31 12:06:00");
+// dt.to_next_year();
+// dt.print();
+// 测试 start
+// let dt = new DateTime("2020/01/01 00:00:00");
+// dt.start(()=>{
+//     dt.print()
+// },dt)
