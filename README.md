@@ -1,17 +1,29 @@
-
-
 # jc-datetime
+
 A Javascript/Node datetime tool.
 
-<b><font color="blue" size="16">目录</font></b>
+`<b><font color="blue" size="16">`目录`</font></b>`
 
 [1. 安装](#1)
 
 [2. 使用教程](#2)
+
 - [2.1 进位器](#2-1)
 - [2.2 秒计数器 Second](#2-2)
+  - [2.2.1 Second 的引入](#2-2-1)
+  - [2.2.2 Second 对象的构造器](#2-2-2)
+  - [2.2.3 Second 对象的属性](#2-2-3)
+  - [2.2.4 Second 对象的方法](#2-2-4)
 - [2.3 分计数器 Minute](#2-3)
-- [2.4 小时计数器 Hour](2-4)
+  - [2.3.1 Minute 的引入](#2-3-1)
+  - [2.3.2 Minute 对象的构造器](#2-3-2)
+  - [2.3.3 Minute 对象的属性](#2-3-3)
+  - [2.3.4 Minute 对象的方法](#2-3-4)
+- [2.4 小时计数器 Hour](#2-4)
+  - [2.4.1 Hour 的引入](#2-4-1)
+  - [2.4.2 Hour 对象的构造器](#2-4-2)
+  - [2.4.3 Hour 对象的属性](#2-4-3)
+  - [2.4.4 Hour 对象的方法](#2-4-4)
 - [2.5 日期器 Date_](#2-5)
 - [2.6 期日时间对象 DateTime](#2-6)
 - [2.7 独立的函数接口](#2-7)
@@ -25,7 +37,6 @@ A Javascript/Node datetime tool.
   - [next_day 函数](#2-7-8)
   - [last_day 函数](#2-7-9)
 - [2.8 关于 List 对象的说明](#2-8)
-
 
 <div id="1"></div>
 
@@ -47,21 +58,21 @@ yarn add jc-datetime
 
 # [2. 使用教程](#2)
 
-该模块提供了 `Second`, Minute`, Hour`, Date_`, `DateTime` 五个对象，分别可以用于 秒、分、时、日期、日期时间的处理。
+该模块提供了 `Second`, Minute `, Hour`, Date_`, `DateTime` 五个对象，分别可以用于 秒、分、时、日期、日期时间的处理。
 
 <div id="2-1"></div>
 
 ## [2.1 进位器](#2-1)
 
-进位器是一个未直接暴露出来的对象，但是在 `Second`, Minute`, Hour` 中都将其引用为自身的参数。顾名思义，进位器是用以标志是否进位和进位的方式的对象，它用于标志当前计数是否已经溢出。溢出有两种形式，一种是正向计数时超出计数器的计数满值，我们将其称之为 **进位**。另一种时反向计数时直到本位为 `0` 后，再一次到达满值时的溢出，我们将其称之为 **退位**。
+进位器是一个未直接暴露出来的对象，但是在 `Second`, Minute `, Hour` 中都将其引用为自身的参数。顾名思义，进位器是用以标志是否进位和进位的方式的对象，它用于标志当前计数是否已经溢出。溢出有两种形式，一种是正向计数时超出计数器的计数满值，我们将其称之为 **进位**。另一种时反向计数时直到本位为 `0` 后，再一次到达满值时的溢出，我们将其称之为 **退位**。
 
 进位器对象 Carry 提供了以下方法：
 
-| 方法名 | 描述 | 返回值类型 |
-| :- | :- | :- |
-| **set** | 设置进位 | `void` |
-| **set_back** | 设置退位 | `void` |
-| **clear** | 清空标志  | `void` |
+| 方法名              | 描述           | 返回值类型 |
+| :------------------ | :------------- | :--------- |
+| **set**       | 设置进位       | `void`   |
+| **set_back**  | 设置退位       | `void`   |
+| **clear**     | 清空标志       | `void`   |
 | **get_state** | 获取进位器状态 | `number` |
 
 其中进位器的状态是一个枚举，它有三个枚举值：`CarryEnum.CARRY`、`CarryEnum.NONE`、`CarryEnum.BACK`分别表示 有进位、无进退位、有退位。
@@ -83,7 +94,9 @@ declare class Second {
 }
 ```
 
-### 2.2.1 `Second` 的引入
+<div id="2-2-1"></div>
+
+### [2.2.1 `Second` 的引入](#2-2-1)
 
 可以通过如下方式来引入 Second 对象：
 
@@ -91,31 +104,37 @@ declare class Second {
 import { Second } from 'jc-datetime'
 ```
 
-### 2.2.2 `Second` 对象的构造器
+<div id="2-2-2"></div>
+
+### [2.2.2 `Second` 对象的构造器](#2-2-2)
 
 ```
 Second(s: number=0)
 ```
 
-| 参数 | 类型 | 默认值 | 描述 |
-| :- | :- | :- | :- |
-| s | number | 0 | 初始化的秒值 |
+| 参数 | 类型   | 默认值 | 描述         |
+| :--- | :----- | :----- | :----------- |
+| s    | number | 0      | 初始化的秒值 |
 
+<div id="2-2-3"></div>
 
-### 2.2.3 `Second` 对象的属性
+### [2.2.3 `Second` 对象的属性](#2-2-3)
+
 #### 进位标志 c
+
 该标志是一个 Carry 的实例，用于标志是否进位、退位。
 
-### 2.2.4 `Second` 对象的方法
+<div id="2-2-4"></div>
 
-| 方法名 | 描述 | 返回值 |
-|:-|:-|:-|
-| **next** | 下一秒 | `void` |
-| **last** | 上一秒 | `void` |
-| **start** | 开始计数 | `void` |
-| **print** | 打印时间 | `void` |
+### [2.2.4 `Second` 对象的方法](#2-2-4)
+
+| 方法名              | 描述       | 返回值     |
+| :------------------ | :--------- | :--------- |
+| **next**      | 下一秒     | `void`   |
+| **last**      | 上一秒     | `void`   |
+| **start**     | 开始计数   | `void`   |
+| **print**     | 打印时间   | `void`   |
 | **get_value** | 获取时间值 | `string` |
-
 
 #### next 方法
 
@@ -125,7 +144,9 @@ s.print();
 s.next();
 s.print();
 ```
+
 `out[]:`
+
 ```
 59
 00
@@ -139,13 +160,16 @@ s.print();
 s.last();
 s.print();
 ```
+
 ```
 00
 59
 ```
 
 #### start 方法
+
 调用 start 方法将启动一个计数器，它每秒使当前 Second 对象实例的计数值增加 1 秒。
+
 ```ts
 let s = new Second(0);
 s.start(()=>{
@@ -154,7 +178,6 @@ s.start(()=>{
 ```
 
 ![WindowsTerminal_lQoPcNRGaN](https://user-images.githubusercontent.com/65340846/192085744-db30758c-9f5c-4555-a915-fde0fe457e0b.gif)
-
 
 #### get_value 方法
 
@@ -182,56 +205,75 @@ declare class Minute {
 }
 ```
 
-### 2.3.1 `Minute` 的引入
+<div id="2-3-1"></div>
+
+### [2.3.1 `Minute` 的引入](#2-3-1)
 
 ```js
 import { Minute } from 'jc-datetime'
 ```
 
-### 2.3.2 `Minute` 对象的构造器
+<div id="2-3-2"></div>
+
+### [2.3.2 `Minute` 对象的构造器](#2-3-2)
 
 ```js
 constructor(m:number=0,s:number=0)
 ```
 
-| 参数 | 描述 | 类型 | 默认值 |
-| :- | :- | :- | :- |
-| m | 分 | number | 0 |
-| s | 秒 | number | 0 |
+| 参数 | 描述 | 类型   | 默认值 |
+| :--- | :--- | :----- | :----- |
+| m    | 分   | number | 0      |
+| s    | 秒   | number | 0      |
 
 如果没有指定任何参数，将默认初始为 0 ，例如：
+
 ```ts
 let m = new Minute();
 m.print();
 ```
+
 `Out[]:`
+
 ```
 00:00
 ```
+
 也可以初始化一个指定的值：
+
 ```ts
 let m = new Minute(29,59);
 m.print();
 ```
+
 `Out[]:`
+
 ```
 29:59
 ```
 
-### 2.3.3 `Minute` 对象的属性
+<div id="2-3-3"></div>
+
+### [2.3.3 Minute 对象的属性](#2-3-3)
 
 #### 进位标志 c
 
 该标志是一个 Carry 的实例，用于标志是否进位、退位。
 
-### 2.3.4 `Minute` 对象的方法
+<div id="2-3-4"></div>
+
+### [2.3.4 Minute 对象的方法](#2-3-4)
 
 #### next 方法
+
 下一分钟，就地更改当前对象。
+
 ```ts
 next():void
 ```
+
 例如：
+
 ```ts
 let m = new Minute(58,0);
 m.print();
@@ -240,7 +282,9 @@ m.print();
 m.next();
 m.print();
 ```
+
 `Out[]:`
+
 ```
 58:00
 59:00
@@ -248,107 +292,147 @@ m.print();
 ```
 
 #### last 方法
+
 上一分钟，就地更改当前对象。
+
 ```ts
 last():void
 ```
+
 例如：
+
 ```ts
 let m = new Minute(0,0);
 m.print();
 m.last();
 m.print();
 ```
+
 `Out[]:`
+
 ```
 00:00
 59:00
 ```
 
 #### next_second 方法
+
 下一秒种，就地更改当前对象。
+
 ```ts
 next_second():void
 ```
+
 例如：
+
 ```ts
 let m = new Minute(0,0);
 m.next_second();
 m.print();
 ```
+
 `Out[]:`
+
 ```
 00:01
 ```
 
 #### last_second 方法
+
 上一秒种，就地更改当前对象。
+
 ```ts
 last_second():void
 ```
+
 例如：
+
 ```ts
 let m = new Minute(0,0);
 m.last_second();
 m.print();
 ```
+
 `Out[]:`
+
 ```
 59:59
 ```
 
 #### get_value 方法
+
 获取当前计数值
+
 ```ts
 get_value():string
 ```
+
 例如：
+
 ```ts
 let m = new Minute(0,0);
 m.last_second();
 console.log(m.get_value());
 ```
+
 `Out[]:`
+
 ```
 59:59
 ```
 
 #### get_minute 方法
+
 获取分钟
+
 ```ts
 get_minute():number
 ```
+
 例如：
+
 ```ts
 let m = new Minute(17, 46);
 console.log(m.get_minute());
 ```
+
 `Out[]:`
+
 ```
 17
 ```
 
 #### get_second 方法
+
 获取秒种值
+
 ```ts
 get_second():number
 ```
+
 例如：
+
 ```ts
 let m = new Minute(17, 46);
 console.log(m.get_second());
 ```
+
 `Out[]:`
+
 ```
 46
 ```
 
 #### start 方法
+
 开始计时。
+
 ```ts
 start(func: Function, ...params: any[]):void
 ```
+
 例如：
+
 ```ts
 let m = new Minute(17,46);
 m.start(()=>{
@@ -358,7 +442,7 @@ m.start(()=>{
 
 <div id="2-4"></div>
 
-## [2.4 小时计数器 Hour](2-4)
+## [2.4 小时计数器 Hour](#2-4)
 
 ```ts
 declare class Hour {
@@ -383,14 +467,13 @@ declare class Hour {
 }
 ```
 
-### 2.4.1 `Hour` 的引入
+### [2.4.1 Hour 的引入](#2-4-1)
 
 ```js
 import { Hour } from 'jc-datetime'
 ```
 
-
-### 2.4.2 `Hour` 对象的构造器
+### [2.4.2 Hour 对象的构造器](#2-4-2)
 
 ```js
 constructor(time: undefined);
@@ -398,23 +481,17 @@ constructor(time: string);
 constructor(time: [number, number, number])
 ```
 
+### [2.4.3 Hour 对象的属性](#2-4-3)
 
-
-### 2.4.3 `Hour` 对象的属性
 #### 进位标志 c
 
 该标志是一个 Carry 的实例，用于标志是否进位、退位。
 
-
-### 2.4.4 `Hour` 对象的方法
-
-
+### [2.4.4 Hour 对象的方法](#2-4-4)
 
 <div id="2-5"></div>
 
 ## [2.5 日期器 Date_](#2-5)
-
-
 
 ```ts
 declare class Date_ {
@@ -443,8 +520,6 @@ declare class Date_ {
 import { Date_ } from 'jc-datetime'
 ```
 
-
-
 ### 2.5.2 `Date_` 对象的构造器
 
 ```ts
@@ -453,39 +528,55 @@ constructor(param: []);
 constructor(param: [string]);
 constructor(param: [number, number, number]); 
 ```
+
 你可以使用一个字符串来初始化 Date_对象，字符串需要指定年（yyyy）、月（MM）、日（DD），并使用“/”进行分隔。例如：
+
 ```js
 let d = new Date_("2022/05/26");
 d.print();
 ```
+
 `Out[]:`
+
 ```
 2022/5/26
 ```
-也可以为这个字符串套上一个`[]`，使之成为一个字符串数组参数，这有完全相同的效果：
+
+也可以为这个字符串套上一个 `[]`，使之成为一个字符串数组参数，这有完全相同的效果：
+
 ```js
 let d = new Date_(["2022/05/26"]);
 d.print();
 ```
+
 `Out[]:`
+
 ```
 2022/5/26
 ```
+
 或者以三个数字构成的数组分别给出年、月、日的数值，例如：
+
 ```js
 let d = new Date_([2022,5,26]);
 d.print();
 ```
+
 `Out[]:`
+
 ```
 2022/5/26
 ```
+
 如果你传入的是一个空数组，则自动初化为当前的日期，例如我电脑当前的系统时间的日期为 2022年8月25日：
+
 ```js
 let d = new Date_([]);
 d.print();
 ```
+
 `Out[]:`
+
 ```
 2022/8/25
 ```
@@ -499,81 +590,105 @@ d.print();
 ### 2.5.4 `Date_` 对象的方法
 
 #### is_leap_year
+
 返回当前实例的日期值是否是闰年。
 
 例如：
+
 ```js
 let d = new Date_([]);
 d.print();
 console.log(d.is_leap_year());
 ```
+
 `Out[]:`
+
 ```
 2022/8/25
 false
 ```
 
 #### next
+
 返回当前实例的日期值的下一天
 例如：
+
 ```js
 let d = new Date_("2019/12/31");
 let nextDay = d.next();
 nextDay.print();
 ```
+
 `Out[]:`
+
 ```
 2020/1/1
 ```
 
 #### last
+
 返回当前实例的日期值前一天
 例如：
+
 ```js
 let d = new Date_("2019/01/01");
 let lastDay = d.last();
 lastDay.print();
 ```
+
 `Out[]:`
+
 ```
 2018/12/31
 ```
 
 #### ndays_ago
+
 返回当前实例的日期值的 n 天前
 例如：
+
 ```js
 let d = new Date_("2021/01/01");
 let nAgo = d.ndays_ago(32);
 nAgo.print();
 ```
+
 `Out[]:`
+
 ```
 2020/11/30
 ```
 
 #### ndays_later
+
 返回当前实例的日期值的 n 天后
 例如：
+
 ```js
 let d = new Date_("2021/01/01");
 let nAgo = d.ndays_later(59);
 nAgo.print();
 ```
+
 `Out[]:`
+
 ```
 2021/3/1
 ```
 
 #### ndaylist_next
-从当前开始，向后 n-1 个 Date_ 对象构成一个列表返回 
+
+从当前开始，向后 n-1 个 Date_ 对象构成一个列表返回
 例如：
+
 ```js
 let d = new Date_("2021/01/01");
 let nLextNext = d.ndaylist_next(32);
 console.log(nLextNext);
 ```
+
 `Out[]:`
+
 ```
 List(32) [
   Date_ { year: 2021, month: 1, day: 1 },
@@ -611,16 +726,19 @@ List(32) [
 ]
 ```
 
-
 #### ndaylist_last
+
 返回当前实例的日期值
 例如：
+
 ```js
 let d = new Date_("2020/03/6");
 let nLextLast = d.ndaylist_last(9);
 console.log(nLextLast);
 ```
+
 `Out[]:`
+
 ```
 List(9) [
   Date_ { year: 2020, month: 3, day: 6 },
@@ -636,55 +754,75 @@ List(9) [
 ```
 
 #### get_value
+
 > deprecated since v1.03, please use getter `value()` instead
 
 返回当前实例的日期值
 例如：
+
 ```js
 
 ```
 
-
 ### 2.5.4 `Date_` 对象存取器
-####  year
+
+#### year
+
 > since v1.0.4
 
 作为 setter 使用：
+
 ```ts
 
 ```
+
 作为 getter 使用：
+
 ```ts
 
 ```
+
 #### month
->since v1.0.4
-作为 setter 使用：
+
+> since v1.0.4
+> 作为 setter 使用：
+
 ```ts
 
 ```
+
 作为 getter 使用：
+
 ```ts
 
 ```
+
 #### day
->since v1.0.4
-作为 setter 使用：
+
+> since v1.0.4
+> 作为 setter 使用：
+
 ```ts
 
 ```
+
 作为 getter 使用：
+
 ```ts
 
 ```
 
 #### value
->since v1.0.4
-作为 setter 使用：
+
+> since v1.0.4
+> 作为 setter 使用：
+
 ```ts
 
 ```
+
 作为 getter 使用：
+
 ```ts
 
 ```
@@ -718,7 +856,6 @@ declare class DateTime {
 import { DateTime } from 'jc-datetime'
 ```
 
-
 ### 2.6.2 `DateTime` 对象的构造器
 
 ```ts
@@ -728,39 +865,50 @@ constructor(param:[date:Date_, time:Hour]);
 ```
 
 通过传入日期时间字符串构造：
+
 ```ts
 let dt = new DateTime("2022/05/26 20:59:25");
 dt.print();
 ```
+
 `Out[]:`
+
 ```
 2022/05/26 20:59:25
 ```
+
 也可以通过传入一个空数组，初始化为当前的系统时间，比如我当前系统时间是2022年8月25日12点22，则：
+
 ```ts
 let dt = new DateTime([])
 dt.print();
 ```
+
 `Out[]:`
+
 ```
 2022/08/25 12:22:14
 ```
+
 你还可以先构造一个 Date_ 对象的实例 和 一个 Hour 对象的实例，再将他们作为参数传入构造器
 
 ### 2.6.3 `DateTime` 对象的方法
 
 #### to_last_second
+
 上一秒
+
 ```ts
 
 ```
 
 #### to_next_second
+
 下一秒
+
 ```ts
 
 ```
-
 
 #### to_last_minute
 
@@ -768,13 +916,11 @@ dt.print();
 
 ```
 
-
 #### to_next_minute
 
 ```ts
 
 ```
-
 
 #### to_last_hour
 
@@ -782,14 +928,11 @@ dt.print();
 
 ```
 
-
 #### to_next_hour
 
 ```ts
 
 ```
-
-
 
 #### to_last_day
 
@@ -797,14 +940,11 @@ dt.print();
 
 ```
 
-
-
 #### to_next_day
 
 ```ts
 
 ```
-
 
 #### to_next_month
 
@@ -812,13 +952,11 @@ dt.print();
 
 ```
 
-
 #### to_next_year
 
 ```ts
 
 ```
-
 
 #### start
 
@@ -826,26 +964,24 @@ dt.print();
 
 ```
 
-
-
 <div id="2-7"></div>
 
 ## [2.7 独立的函数接口](#2-7)
 
-> v1.03 
+> v1.03
 
 除了上面提到的这几个对象外，本模块还提供了一些独立的函数。他们可以被视作一些小工具，以补充功能。
 
-|函数|描述|
-|:-|:-|
-| is_leap_year | 是否是闰年 |
-| is_big_month | 是否是大月 |
-| get_calendar | 获取某月日历列表 |
-| get_days | 获取某个月的天数 |
-| datelist | 获取某两个日期间所有日期构成的日期列表 |
-| next_month | 下个月 |
-| next_day | 明天（下一天） |
-| last_day | 昨天（上一天） |
+| 函数         | 描述                                   |
+| :----------- | :------------------------------------- |
+| is_leap_year | 是否是闰年                             |
+| is_big_month | 是否是大月                             |
+| get_calendar | 获取某月日历列表                       |
+| get_days     | 获取某个月的天数                       |
+| datelist     | 获取某两个日期间所有日期构成的日期列表 |
+| next_month   | 下个月                                 |
+| next_day     | 明天（下一天）                         |
+| last_day     | 昨天（上一天）                         |
 
 <div id="2-7-1"></div>
 
@@ -871,7 +1007,9 @@ for (let i = 1; i <= 12; i++) {
     console.log(i<10?`2022/0${i} 有 ${days} 天`:`2022/${i} 有 ${days} 天`);
 } 
 ```
+
 `out[]:`
+
 ```
 2022/01 有 31 天
 2022/02 有 28 天
@@ -897,7 +1035,9 @@ for (let i = 1; i <= 12; i++) {
     console.log(`${year} 年是${word}年`);
 });
 ```
+
 `out[]:`
+
 ```
 1999 年是平年
 2000 年是润年
@@ -918,7 +1058,9 @@ for (let i = 1; i <= 12; i++) {
     console.log(`${i}月是`+(isBigMonth?`大月`:`小月`));
 } 
 ```
+
 `out[]:`
+
 ```
 1月是大月
 2月是小月
@@ -942,7 +1084,9 @@ for (let i = 1; i <= 12; i++) {
 let calendar = get_calendar("2022/02");
 console.log(calendar);
 ```
+
 `out[]:`
+
 ```
 List(28) [
   '2022/02/01', '2022/02/02', '2022/02/03',
@@ -966,7 +1110,9 @@ List(28) [
 let list = datelist("2022/01/29","2022/04/06")
 console.log(list);
 ```
+
 `out[]:`
+
 ```
 List(120) [
   '2022/01/01', '2022/01/02', '2022/01/03', '2022/01/04', '2022/01/05',
@@ -1001,7 +1147,9 @@ List(120) [
 let nextmonth = next_month(2021,12);
 console.log(nextmonth);
 ```
+
 `out[]:`
+
 ```
 2022/01
 ```
@@ -1014,7 +1162,9 @@ console.log(nextmonth);
 let nextday = next_day("2020/02/29");
 console.log(nextday);
 ```
+
 `out[]:`
+
 ```
 2020/03/01
 ```
@@ -1027,7 +1177,9 @@ console.log(nextday);
 let lastday = last_day("2020/03/01");
 console.log(lastday);
 ```
+
 `out[]:`
+
 ```
 2020/02/29
 ```
@@ -1037,4 +1189,3 @@ console.log(lastday);
 ## [2.8 关于 List 对象的说明](#2-8)
 
 在本模块中 List 是一个内部定义的数据容器，它继承于原生 JavaScript 的 Array 对象。一些返回一组值的方法，如 `dartelist()` ，所返回的都不是原生的 JavaScript Array而是 List。
-
