@@ -627,10 +627,43 @@ import { Hour } from 'jc-datetime'
 
 ### [2.4.2 Hour 对象的构造器](#2-4-2)
 
+
 ```js
-constructor(time: undefined);
 constructor(time: string);
-constructor(time: [number, number, number])
+constructor(time: []);
+constructor(time: [number, number, number]); 
+```
+
+#### 使用小时字符串构造
+例如：
+```ts
+let h = new Hour("21:25:00");
+h.print();
+```
+`Out[]:`
+```
+21:25:00
+```
+
+#### 使用空数组构造
+使用空数组将初始化为当前的系统时间，比如我现在是 21:14：
+```ts
+let h = new Hour([]);
+h.print();
+```
+`Out[]:`
+```
+21:14:15
+```
+
+#### 使用数字数组构造
+```ts
+let h = new Hour([1, 30, 0]);
+h.print();
+```
+`Out[]:`
+```
+01:30:00
 ```
 
 <div id="2-4-3"></div>
