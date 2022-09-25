@@ -1304,6 +1304,17 @@ import {
 
 ### [get_days 函数](#2-7-2)
 
+```ts
+/**
+ * 返回某个月的天数
+ * @param {string} yearmonth 表示某个月的字符串，形如 `2022/05/26`
+ * @returns {number} 指定月份的日期
+ */
+get_days(yearmonth: string): number | undefined;
+```
+
+例如：
+
 ```js
 for (let i = 1; i <= 12; i++) {
     let days = get_days(`2022/${i}`);
@@ -1332,6 +1343,17 @@ for (let i = 1; i <= 12; i++) {
 
 ### [is_leap_year 函数](#2-7-3)
 
+```ts
+/**
+ * 判断某年是否是闰年
+ * @param {number} year 年号值
+ * @returns {boolean} 如果是闰年则返回 true
+ */
+is_leap_year(year: number): boolean;
+```
+
+例如：
+
 ```js
 [1999,2000,2001,2020,2021,2022,3000].forEach(year => {
     let word = is_leap_year(year)?"润":"平";
@@ -1354,6 +1376,15 @@ for (let i = 1; i <= 12; i++) {
 <div id="2-7-4"></div>
 
 ### [is_big_month 函数](#2-7-4)
+
+```ts
+/**
+ * 判断某个月是否是大月（31天的月）
+ * @param {number} month 月号，如 `12`
+ * @returns {boolean} 如果是大月则返回 true
+ */
+is_big_month(month: number): boolean;
+```
 
 ```js
 for (let i = 1; i <= 12; i++) {
@@ -1383,6 +1414,15 @@ for (let i = 1; i <= 12; i++) {
 
 ### [get_calendar 函数](#2-7-5)
 
+```ts
+/**
+ * 返回日历表
+ * @param yearmonth 表示月份的字符串，形如 `2022/05/26`
+ * @returns {string[]}
+ */
+get_calendar(yearmonth: string): string[];
+```
+
 ```js
 let calendar = get_calendar("2022/02");
 console.log(calendar);
@@ -1408,6 +1448,12 @@ List(28) [
 <div id="2-7-6"></div>
 
 ### [datelist 函数](#2-7-6)
+
+```ts
+static datelist(date_begin: string, date_end: string): List;
+```
+
+例如：
 
 ```js
 let list = datelist("2022/01/29","2022/04/06")
@@ -1446,6 +1492,12 @@ List(120) [
 
 ### [next_month 函数](#2-7-7)
 
+```ts
+static next_month(year: number, month: number): string;
+```
+
+例如：
+
 ```js
 let nextmonth = next_month(2021,12);
 console.log(nextmonth);
@@ -1461,6 +1513,17 @@ console.log(nextmonth);
 
 ### [next_day 函数](#2-7-8)
 
+```ts
+/**
+ * 明天
+ * @param yearmonth 表示月份的字符串，形如 `2022/05/26`
+ * @returns
+ */
+next_day(yearmonth: string): string;
+```
+
+例如：
+
 ```js
 let nextday = next_day("2020/02/29");
 console.log(nextday);
@@ -1475,6 +1538,17 @@ console.log(nextday);
 <div id="2-7-9"></div>
 
 ### [last_day 函数](#2-7-9)
+
+```ts
+/**
+ * 昨天
+ * @param yearmonth 表示月份的字符串，形如 `2022/05/26`
+ * @returns
+ */
+last_day(yearmonth: string): string;
+```
+
+例如：
 
 ```js
 let lastday = last_day("2020/03/01");
