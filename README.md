@@ -2,7 +2,7 @@
 
 A Javascript/Node datetime tool.
 
-`<b><font color="blue" size="16">`目录`</font></b>`
+`<b><font color="blue" size="16">`目录 `</font></b>`
 
 [1. 安装](#1)
 
@@ -25,6 +25,11 @@ A Javascript/Node datetime tool.
   - [2.4.3 Hour 对象的属性](#2-4-3)
   - [2.4.4 Hour 对象的方法](#2-4-4)
 - [2.5 日期器 Date_](#2-5)
+  - [2.5.1 Date_ 的引入](#2-5-1)
+  - [2.5.2 `Date_` 对象的构造器](#2-5-2)
+  - [2.5.3 `Date_` 对象的属性](#2-5-3)
+  - [2.5.4 `Date_` 对象的方法](#2-5-4)
+  - [2.5.5 `Date_` 对象存取器](#2-5-5)
 - [2.6 期日时间对象 DateTime](#2-6)
 - [2.7 独立的函数接口](#2-7)
   - [引入方式](#2-7-1)
@@ -467,11 +472,15 @@ declare class Hour {
 }
 ```
 
+<div id="2-4-1"></div>
+
 ### [2.4.1 Hour 的引入](#2-4-1)
 
 ```js
 import { Hour } from 'jc-datetime'
 ```
+
+<div id="2-4-2"></div>
 
 ### [2.4.2 Hour 对象的构造器](#2-4-2)
 
@@ -481,11 +490,16 @@ constructor(time: string);
 constructor(time: [number, number, number])
 ```
 
+<div id="2-4-3"></div>
+
 ### [2.4.3 Hour 对象的属性](#2-4-3)
 
 #### 进位标志 c
 
 该标志是一个 Carry 的实例，用于标志是否进位、退位。
+
+
+<div id="2-4-4"></div>
 
 ### [2.4.4 Hour 对象的方法](#2-4-4)
 
@@ -514,13 +528,17 @@ declare class Date_ {
 }
 ```
 
-### 2.5.1 Date_ 的引入
+<div id="2-5-1"></div>
+
+### [2.5.1 Date_ 的引入](#2-5-1)
 
 ```js
 import { Date_ } from 'jc-datetime'
 ```
 
-### 2.5.2 `Date_` 对象的构造器
+<div id="2-5-2"></div>
+
+### [2.5.2 `Date_` 对象的构造器](#2-5-2)
 
 ```ts
 constructor(param: string);
@@ -581,13 +599,18 @@ d.print();
 2022/8/25
 ```
 
-### 2.5.3 `Date_` 对象的属性
+<div id="2-5-3"></div>
+
+### [2.5.3 `Date_` 对象的属性](#2-5-3)
 
 #### 进位标志 c
 
 该标志是一个 Carry 的实例，用于标志是否进位、退位。
 
-### 2.5.4 `Date_` 对象的方法
+
+<div id="2-5-4"></div>
+
+### [2.5.4 `Date_` 对象的方法](#2-5-4)
 
 #### is_leap_year
 
@@ -764,7 +787,7 @@ List(9) [
 
 ```
 
-### 2.5.4 `Date_` 对象存取器
+### [2.5.5 `Date_` 对象存取器](#2-5-5)
 
 #### year
 
@@ -850,13 +873,13 @@ declare class DateTime {
 }
 ```
 
-### 2.6.1 DateTime 的引入
+### [2.6.1 DateTime 的引入](#2-6-1)
 
 ```js
 import { DateTime } from 'jc-datetime'
 ```
 
-### 2.6.2 `DateTime` 对象的构造器
+### [2.6.2 `DateTime` 对象的构造器](#2-6-2)
 
 ```ts
 constructor(param: []);
@@ -892,7 +915,7 @@ dt.print();
 
 你还可以先构造一个 Date_ 对象的实例 和 一个 Hour 对象的实例，再将他们作为参数传入构造器
 
-### 2.6.3 `DateTime` 对象的方法
+### [2.6.3 `DateTime` 对象的方法](#2-6-3)
 
 #### to_last_second
 
