@@ -15,6 +15,15 @@ A Javascript/Node datetime tool.
 - [2.5 日期器 Date_](#2-5)
 - [2.6 期日时间对象 DateTime](#2-6)
 - [2.7 独立的函数接口](#2-7)
+  - [引入方式](#2-7-1)
+  - [get_days 函数](#2-7-2)
+  - [is_leap_year 函数](#2-7-3)
+  - [is_big_month 函数](#2-7-4)
+  - [get_calendar 函数](#2-7-5)
+  - [datelist 函数](#2-7-6)
+  - [next_month 函数](#2-7-7)
+  - [next_day 函数](#2-7-8)
+  - [last_day 函数](#2-7-9)
 - [2.8 关于 List 对象的说明](#2-8)
 
 
@@ -838,7 +847,9 @@ dt.print();
 | next_day | 明天（下一天） |
 | last_day | 昨天（上一天） |
 
-### 引入方式
+<div id="2-7-1"></div>
+
+### [2.7.1 引入方式](#2-7-1)
 
 你可以根据需要，参考如下方式进行引入：
 
@@ -850,7 +861,9 @@ import {
 } from 'jc-datetime'
 ```
 
-### get_days 函数
+<div id="2-7-2"></div>
+
+### [get_days 函数](#2-7-2)
 
 ```js
 for (let i = 1; i <= 12; i++) {
@@ -874,9 +887,9 @@ for (let i = 1; i <= 12; i++) {
 2022/12 有 31 天
 ```
 
+<div id="2-7-3"></div>
 
-
-### is_leap_year 函数
+### [is_leap_year 函数](#2-7-3)
 
 ```js
 [1999,2000,2001,2020,2021,2022,3000].forEach(year => {
@@ -895,8 +908,9 @@ for (let i = 1; i <= 12; i++) {
 3000 年是润年
 ```
 
+<div id="2-7-4"></div>
 
-### is_big_month 函数
+### [is_big_month 函数](#2-7-4)
 
 ```js
 for (let i = 1; i <= 12; i++) {
@@ -920,7 +934,9 @@ for (let i = 1; i <= 12; i++) {
 12月是大月
 ```
 
-### get_calendar 函数
+<div id="2-7-5"></div>
+
+### [get_calendar 函数](#2-7-5)
 
 ```js
 let calendar = get_calendar("2022/02");
@@ -942,8 +958,9 @@ List(28) [
 ]
 ```
 
+<div id="2-7-6"></div>
 
-### datelist 函数
+### [datelist 函数](#2-7-6)
 
 ```js
 let list = datelist("2022/01/29","2022/04/06")
@@ -976,7 +993,9 @@ List(120) [
 ]
 ```
 
-### next_month 函数
+<div id="2-7-7"></div>
+
+### [next_month 函数](#2-7-7)
 
 ```js
 let nextmonth = next_month(2021,12);
@@ -987,8 +1006,9 @@ console.log(nextmonth);
 2022/01
 ```
 
+<div id="2-7-8"></div>
 
-### next_day 函数
+### [next_day 函数](#2-7-8)
 
 ```js
 let nextday = next_day("2020/02/29");
@@ -999,8 +1019,9 @@ console.log(nextday);
 2020/03/01
 ```
 
+<div id="2-7-9"></div>
 
-### last_day 函数
+### [last_day 函数](#2-7-9)
 
 ```js
 let lastday = last_day("2020/03/01");
