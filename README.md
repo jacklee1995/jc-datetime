@@ -24,11 +24,27 @@ A Javascript/Node datetime tool.
   - [2.4.2 Hour 对象的构造器](#2-4-2)
   - [2.4.3 Hour 对象的属性](#2-4-3)
   - [2.4.4 Hour 对象的方法](#2-4-4)
+    - [to_last_second：拨到上一秒](#2-4-4-1)
+    - [to_next_second：拨到下一秒](#2-4-4-2)
+    - [to_last_minute：拨到上一分钟](#2-4-4-3)
+    - [to_next_minute：拨到下一分钟](#2-4-4-4)
+    - [to_last：拨到上一小时](#2-4-4-5)
+    - [to_next：拨到下一小时](#2-4-4-6)
+    - [set_locale_time：同步到本地时间](#2-4-4-7)
+    - [start：开始计时](#2-4-4-8)
 - [2.5 日期器 Date_](#2-5)
   - [2.5.1 Date_ 的引入](#2-5-1)
   - [2.5.2 `Date_` 对象的构造器](#2-5-2)
   - [2.5.3 `Date_` 对象的属性](#2-5-3)
   - [2.5.4 `Date_` 对象的方法](#2-5-4)
+    - [is_leap_year：当前实例的日期值是否是闰年](#2-5-4-1)
+    - [to_next：时间拨到明天](#2-5-4-2)
+    - [to_last：时间拨到昨天](#2-5-4-3)
+    - [ndays_ago：当前实例的日期值的 n 天前](#2-5-4-4)
+    - [ndays_later：当前实例的日期值的 n 天后](#2-5-4-5)
+    - [ndaylist_next：向后 n-1 个 Date_ 对象构成一个列表返回](#2-5-4-6)
+    - [ndaylist_last：当前实例的日期值](#2-5-4-7)
+    - [get_value：返回当前实例的日期值](#2-5-4-8)
   - [2.5.5 `Date_` 对象存取器](#2-5-5)
 - [2.6 期日时间对象 DateTime](#2-6)
 - [2.7 独立的函数接口](#2-7)
@@ -678,6 +694,125 @@ h.print();
 <div id="2-4-4"></div>
 
 ### [2.4.4 Hour 对象的方法](#2-4-4)
+<div id="2-4-4-1"></div>
+
+#### [to_last_second：拨到上一秒](#2-4-4-1)
+
+```ts
+let h = new Hour("00:00:00");
+h.to_last_second();
+h.print();
+```
+`Out[]:`
+```
+59:59:59
+```
+
+
+<div id="2-4-4-2"></div>
+
+#### [to_next_second：拨到下一秒](#2-4-4-2)
+
+```ts
+let h = new Hour("59:59:59");
+h.to_next_second();
+h.print();
+```
+`Out[]:`
+```
+00:00:00
+```
+
+
+
+<div id="2-4-4-3"></div>
+
+#### [to_last_minute：拨到上一分钟](#2-4-4-3)
+
+```ts
+let h = new Hour("00:00:00");
+h.to_last_minute();
+h.print();
+```
+`Out[]:`
+```
+59:59:00
+```
+
+
+<div id="2-4-4-4"></div>
+
+#### [to_next_minute：拨到下一分钟](#2-4-4-4)
+
+```ts
+let h = new Hour("00:59:00");
+h.to_next_minute();
+h.print();
+```
+`Out[]:`
+```
+01:00:00
+```
+
+
+<div id="2-4-4-5"></div>
+
+#### [to_last：拨到上一小时](#2-4-4-5)
+
+```ts
+let h = new Hour("00:00:00");
+h.to_last();
+h.print();
+```
+`Out[]:`
+```
+59:00:00
+```
+
+
+<div id="2-4-4-6"></div>
+
+#### [to_next：拨到下一小时](#2-4-4-6)
+
+```ts
+let h = new Hour("59:00:00");
+h.to_next();
+h.print();
+```
+`Out[]:`
+```
+00:00:00
+```
+
+
+
+<div id="2-4-4-7"></div>
+
+#### [set_locale_time：同步到本地时间](#2-4-4-7)
+
+```ts
+let h = new Hour("00:00:00");
+h.set_locale_time(); // 我的当前时间是 21:52:47
+h.print();
+```
+`Out[]:`
+```
+21:52:47
+```
+
+
+
+<div id="2-4-4-8"></div>
+
+#### [start：开始计时](#2-4-4-8)
+
+```ts
+let h = new Hour("00:00:00");
+h.start(()=>{
+    h.print()
+},h)
+```
+
 
 <div id="2-5"></div>
 
@@ -876,10 +1011,9 @@ d.print();
 <div id="2-5-4"></div>
 
 ### [2.5.4 `Date_` 对象的方法](#2-5-4)
+<div id="2-5-4-1"></div>
 
-#### is_leap_year
-
-返回当前实例的日期值是否是闰年。
+#### [is_leap_year：当前实例的日期值是否是闰年](#2-5-4-1)
 
 例如：
 
@@ -895,44 +1029,32 @@ console.log(d.is_leap_year());
 2022/8/25
 false
 ```
+<div id="2-5-4-2"></div>
 
-#### next
+#### [to_next：时间拨到明天](#2-5-4-2)
 
-返回当前实例的日期值的下一天
-例如：
+```ts
 
-```js
-let d = new Date_("2019/12/31");
-let nextDay = d.next();
-nextDay.print();
 ```
-
 `Out[]:`
-
-```
-2020/1/1
 ```
 
-#### last
-
-返回当前实例的日期值前一天
-例如：
-
-```js
-let d = new Date_("2019/01/01");
-let lastDay = d.last();
-lastDay.print();
 ```
+<div id="2-5-4-3"></div>
 
+#### [to_last：时间拨到昨天](#2-5-4-3)
+
+```ts
+
+```
 `Out[]:`
-
-```
-2018/12/31
 ```
 
-#### ndays_ago
+```
+<div id="2-5-4-4"></div>
 
-返回当前实例的日期值的 n 天前
+#### [ndays_ago：当前实例的日期值的 n 天前](#2-5-4-4)
+
 例如：
 
 ```js
@@ -946,10 +1068,10 @@ nAgo.print();
 ```
 2020/11/30
 ```
+<div id="2-5-4-5"></div>
 
-#### ndays_later
+#### [ndays_later：当前实例的日期值的 n 天后](#2-5-4-5)
 
-返回当前实例的日期值的 n 天后
 例如：
 
 ```js
@@ -963,10 +1085,10 @@ nAgo.print();
 ```
 2021/3/1
 ```
+<div id="2-5-4-6"></div>
 
-#### ndaylist_next
+#### [ndaylist_next：向后 n-1 个 Date_ 对象构成一个列表返回](#2-5-4-6)
 
-从当前开始，向后 n-1 个 Date_ 对象构成一个列表返回
 例如：
 
 ```js
@@ -1013,10 +1135,10 @@ List(32) [
   Date_ { year: 2021, month: 2, day: 1 }
 ]
 ```
+<div id="2-5-4-7"></div>
 
-#### ndaylist_last
+#### [ndaylist_last：当前实例的日期值](#2-5-4-7)
 
-返回当前实例的日期值
 例如：
 
 ```js
@@ -1040,17 +1162,20 @@ List(9) [
   Date_ { year: 2020, month: 2, day: 27 }
 ]
 ```
+<div id="2-5-4-8"></div>
 
-#### get_value
+#### [get_value：返回当前实例的日期值](#2-5-4-8)
 
 > deprecated since v1.03, please use getter `value()` instead
 
-返回当前实例的日期值
+
 例如：
 
 ```js
 
 ```
+
+
 
 ### [2.5.5 `Date_` 对象存取器](#2-5-5)
 
@@ -1113,6 +1238,39 @@ List(9) [
 
 ```ts
 
+```
+
+#### next：后一天对应的新 Date_ 对象
+
+返回当前实例的日期值的下一天
+例如：
+
+```js
+let d = new Date_("2019/12/31");
+let nextDay = d.next;
+nextDay.print();
+```
+
+`Out[]:`
+
+```
+2020/1/1
+```
+
+#### last：前一天对应的新 Date_ 对象
+
+例如：
+
+```js
+let d = new Date_("2019/01/01");
+let lastDay = d.last();
+lastDay.print();
+```
+
+`Out[]:`
+
+```
+2018/12/31
 ```
 
 <div id="2-6"></div>
