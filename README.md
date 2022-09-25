@@ -3,6 +3,9 @@
 # jc-datetime
 A Javascript/Node datetime tool.
 
+
+<div id="1"></div>
+
 # [1. 安装](#1)
 
 可以使用 npm 进行安装：
@@ -16,6 +19,8 @@ npm install jc-datetime
 ```shell
 yarn add jc-datetime
 ```
+
+<div id="2"></div>
 
 # [2. 使用教程](#2)
 
