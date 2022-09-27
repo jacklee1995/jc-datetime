@@ -8,9 +8,10 @@ A Javascript/Node datetime tool.
 
 [2. 使用教程](#2)
 
-- [2.1 进位器](#2-1)
+- [2.1 进位器 和 计数器接口](#2-1)
   - [2.1.1 进位器概念](#2-1-1)
   - [2.1.2 进位器枚举值](#2-1-2)
+  - [2.1.3 计数器接口](#2-1-3)
 - [2.2 秒计数器 Second](#2-2)
   - [2.2.1 Second 的引入](#2-2-1)
   - [2.2.2 Second 对象的构造器](#2-2-2)
@@ -99,7 +100,7 @@ yarn add jc-datetime
 
 <div id="2-1"></div>
 
-## [2.1 进位器](#2-1)
+## [2.1 进位器 和 计数器接口](#2-1)
 
 <div id="2-1-1"></div>
 
@@ -111,12 +112,21 @@ yarn add jc-datetime
 
 ```ts
 declare class Carry {
-    _value: any;
+    private _value;
     constructor(b?: CarryEnum | undefined);
     set(): void;
     set_back(): void;
     clear(): void;
+    /**
+     * 获取进位器状态枚举数值
+     * @deprecated since v1.0.7, please use getter state() instead.
+     * @returns {number} v 进位枚举数值
+     */
     get_state(): number;
+    /**
+     * 获取进位器状态枚举数值
+     */
+    get state(): number;
 }
 ```
 
@@ -143,24 +153,46 @@ declare class Carry {
 | CarryEnum.NONE | 0 |
 | CarryEnum.BACK | 2 |
 
+<div id="2-1-3"></div>
+
+### [2.1.3 计数器接口](#2-1-3)
+从 v1.0.7 开始，本模块提供的 Second、Minute、Hour 计数器，都是计数器接口 **Counter** 的实现：
+
+```ts
+interface Counter {
+    c: Carry;
+    to_last(): void;
+    to_next(): void;
+    start(func: Function, ...params: any[]): void;
+    print(): void;
+    get last(): any;
+    get next(): any;
+    get value(): string;
+    get seconds(): number;
+    set seconds(seconds: number);
+}
+```
+
+需要注意的是，在 v1.0.7 版本中，本模块提供的 日期计数器 Date_ 、日期时间计数器 DateTime 不是 Counter 的实现。
+
 <div id="2-2"></div>
 
 ## [2.2 秒计数器 Second](#2-2)
 
 ```ts
-declare class Second {
+declare class Second implements Counter {
     private _value;
     c: Carry;
     /**
      * @param s 初始秒数，范围为 0~59
      */
     constructor(s?: number);
+    /** 将时间拨到上一秒 */
+    to_last(): void;
     /**
-     * 正向行走 1 秒（下一秒）
+     * 将时间拨到下一秒
      */
-    next(): void;
-    /**逆向行走 1 秒（上一秒） */
-    last(): void;
+    to_next(): void;
     /**
      * 开始计时
      * @param func 回调函数
@@ -169,15 +201,39 @@ declare class Second {
     start(func: Function, ...params: any[]): void;
     /**打印秒计数值 */
     print(): void;
-    set seconds(seconds: number);
-    get seconds(): number;
-    get value(): string;
     /**
-     * 获取字符串格式的当前秒计数值
+     * 获取字符串格式的当前秒技术值
      * @returns 被自动补 '0' 的字符串
-     * @deprecated since v1.0.6, use getter value() instead.
+     * @deprecated since v1.0.4, use getter value() instead.
      */
     get_value(): string;
+    /**
+     * 取：以上一秒的时间返回一个新的 Second 对象
+     * @return {Second} 一个新的 Second 对象实例
+     * @since 1.0.7
+     */
+    get last(): Second;
+    /**
+     * 取：以下一秒的时间返回一个新的 Second 对象
+     * @return {Second} 一个新的 Second 对象实例
+     * @since 1.0.7
+     */
+    get next(): Second;
+    /**
+     * 存：秒
+     * @param {number} seconds 将更改的秒的数值
+     */
+    set seconds(seconds: number);
+    /**
+     * 取：秒
+     * @return {number} 将被去除的当前的秒值
+     */
+    get seconds(): number;
+    /**
+     * 取：当前（秒）值字符串
+     * 这个字符串的长度（length）为 2 ，如果（秒）数值只有一位，则自动在前面补一个 0 构成两位字符串
+     */
+    get value(): string;
 }
 ```
 
@@ -213,22 +269,45 @@ Second(s: number=0)
 
 <div id="2-2-4"></div>
 
-### [2.2.4 `Second` 对象的方法](#2-2-4)
+### [2.2.4 `Second` 对象的方法和存取器](#2-2-4)
 
-| 方法名              | 描述       | 返回值     |
-| :------------------ | :--------- | :--------- |
-| **next**      | 下一秒     | `void`   |
-| **last**      | 上一秒     | `void`   |
-| **start**     | 开始计数   | `void`   |
-| **print**     | 打印时间   | `void`   |
-| **get_value** | 获取时间值 | `string` |
+| 方法名         | 描述        | 返回值类型 | 备注 |
+| :------------ | :--------- | :--------- | :--------- |
+|   **to_last** | 将时间拨到上一分钟     | `void`   |  |
+|   **to_next** | 将时间拨到下一分钟     | `void`   |  |
+|   **start**   | 开始计时  | `void`   |  |
+|   **print**   | 打印秒计数值 |  |  |
+| **get_value** | 取：以上一秒的时间返回一个新的 Second 对象 |  | 已废弃，请改用 getter **value** |
+| getter  **last**   | 取：以上一秒的时间返回一个新的 Second 对象 |  |  |
+| getter  **next**   | 取：以下一秒的时间返回一个新的 Second 对象 |  |  |
+| setter **seconds** | 存：秒 |  |  |
+| getter **seconds** | 取：秒 |  |  |
+| getter **value**   | 取：当前（秒）值字符串 |  |  |
 
-#### next 方法
+<div id="2-2-4-1"></div>
+
+#### [2.2.4.1 to_last 方法](#2.2.4.1)
+
+```js
+let s = new Second(0);
+s.print();
+s.to_last();
+s.print();
+```
+
+```
+00
+59
+```
+
+<div id="2-2-4-2"></div>
+
+#### [2.2.4.2 to_next 方法](#2.2.4.2)
 
 ```js
 let s = new Second(59);
 s.print();
-s.next();
+s.to_next();
 s.print();
 ```
 
@@ -239,21 +318,9 @@ s.print();
 00
 ```
 
-#### last 方法
+<div id="2-2-4-3"></div>
 
-```js
-let s = new Second(0);
-s.print();
-s.last();
-s.print();
-```
-
-```
-00
-59
-```
-
-#### start 方法
+#### [2.2.4.3 start 方法](#2.2.4.3)
 
 调用 start 方法将启动一个计数器，它每秒使当前 Second 对象实例的计数值增加 1 秒。
 
@@ -266,63 +333,79 @@ s.start(()=>{
 
 ![WindowsTerminal_lQoPcNRGaN](https://user-images.githubusercontent.com/65340846/192085744-db30758c-9f5c-4555-a915-fde0fe457e0b.gif)
 
-#### get_value 方法
+<div id="2-2-4-4"></div>
 
-该方法返回表示秒值得字符串，如果秒值只有一位，则会被自动补 0。
+#### [2.2.4.4 print 方法](#2.2.4.4)
+
+<div id="2-2-4-5"></div>
+
+#### [2.2.4.5 get_second](#2.2.4.5)
+
+<div id="2-2-4-6"></div>
+
+#### [2.2.4.6 get_value 方法](#2.2.4.6)
+
+> 从v1.0.4 ，请改用 getter value()
+
+
+<div id="2-2-4-7"></div>
+
+#### [2.2.4.7 getter last](#2.2.4.7)
+
+
+<div id="2-2-4-8"></div>
+
+#### [2.2.4.8 getter next](#2.2.4.8)
+
+
+<div id="2-2-4-9"></div>
+
+#### [2.2.4.9 setter seconds](#2.2.4.9)
+
+
+<div id="2-2-4-10"></div>
+
+#### [2.2.4.10 getter seconds](#2.2.4.10)
+
+
+
+<div id="2-2-4-11"></div>
+
+#### [2.2.4.11 getter value](#2.2.4.11)
+
 
 <div id="2-3"></div>
 
 ## [2.3 分计数器 Minute](#2-3)
 
 ```ts
-
-declare class Minute {
+declare class Minute implements Counter {
     private _value;
-    c: Carry;
     private _second;
+    c: Carry;
     /**
      * @param {number} m 分值
      * @param {number} s 秒值
      */
     constructor(m?: number, s?: number);
     /**
-     * 正向行走（分针，即下一分钟）
+     * 将时间拨到上一分钟
+     * @since v1.0.7
      */
-    next(): void;
+    to_last(): void;
     /**
-     * 逆向行走（分针，即上一分钟）
+     * 将时间拨到下一分钟
+     * @since v1.0.7
      */
-    last(): void;
+    to_next(): void;
     /**
-     * 正向行走（秒针，即下一秒）
+     * 将时间拨到上一秒钟
      */
-    next_second(): void;
+    to_last_second(): void;
     /**
-     * 逆向行走（秒针，即上一秒）
+     * 将时间拨到下一秒 钟
      */
-    last_second(): void;
-    /**
-     * 设置秒
-     * @param {number} seconds Number of seconds.
-     * @since v1.0.6
-     */
-    set seconds(seconds: number);
-    /**
-     * 获取秒
-     * @since v1.0.6
-     */
-    get seconds(): number;
-    /**
-     * 设置分
-     * @param {number} seconds Number of minutes.
-     * @since v1.0.6
-     */
-    set minutes(minutes: number);
-    /**
-     * 获取分
-     * @since v1.0.6
-     */
-    get minutes(): number;
+    to_next_second(): void;
     /**
      * 打印当前的分计数值
      */
@@ -334,30 +417,50 @@ declare class Minute {
      */
     get_value(): string;
     /**
-     * 输出当前的分计数值
-     * @returns 被自动补零的 `分:秒` 字符串
-     */
-    get value(): string;
-    /**
-     * 返回分数值
-     * @deprecated since v1.0.6
-     */
-    get_minute(): number;
-    get minute(): number;
-    set minute(minute: number);
-    /**
-     * 返回秒数值
-     * @deprecated since v1.0.6
-     */
-    get_second(): number;
-    get second(): number;
-    set second(second: number);
-    /**
      * 开始计时
      * @param func 秒级回调
      * @param params 回调函数的参数
      */
     start(func: Function, ...params: any[]): void;
+    /**
+     * 获取上一分钟对应的 Minute 对象实例
+     * 注意：该接口在 v1.0.6及以前，功能是将当前 Minute 对象实例 拨到下一分钟，并且不会返回任何值
+     * @since v1.0.7
+     */
+    get last(): Minute;
+    /**
+     * 获取下一分钟对应的 Minute 对象实例
+     * 注意：该接口在 v1.0.6及以前，功能是将当前 Minute 对象实例 拨到下一分钟，并且不会返回任何值
+     * @since v1.0.7
+     */
+    get next(): Minute;
+    /**
+     * 存：秒值
+     * @param {number} seconds Number of seconds.
+     * @since v1.0.4
+     */
+    set seconds(seconds: number);
+    /**
+     * 取：秒值
+     * @since v1.0.4
+     */
+    get seconds(): number;
+    /**
+     * 存：分值
+     * @param {number} seconds Number of minutes.
+     * @since v1.0.4
+     */
+    set minutes(minutes: number);
+    /**
+     * 取：分值
+     * @since v1.0.4
+     */
+    get minutes(): number;
+    /**
+     * 输出当前的分计数值
+     * @returns 被自动补零的 `分:秒` 字符串
+     */
+    get value(): string;
 }
 ```
 
@@ -601,28 +704,47 @@ m.start(()=>{
 ## [2.4 小时计数器 Hour](#2-4)
 
 ```ts
-declare class Hour {
+declare class Hour implements Counter {
     private _value;
+    private _minute;
     c: Carry;
-    minute: Minute;
     constructor(time: string);
     constructor(time: []);
     constructor(time: [number, number, number]);
-    /**下一小时，就地修改 */
-    next(): void;
     /**
-     * 上一小时，就地修改
+     * 拨到上一秒
+     * @since v1.0.4
      */
-    last(): void;
-    /**下一分钟，就地修改 */
-    next_minute(): void;
-    /**上一分钟，就地修改 */
-    last_minute(): void;
-    /**下一秒，就地修改 */
-    next_second(): void;
-    /**上一秒，就地修改 */
-    last_second(): void;
-    /**设定为本地时间 */
+    to_last_second(): void;
+    /**
+     * 拨到下一秒
+     * @since v1.0.4
+     */
+    to_next_second(): void;
+    /**
+     * 拨到上一分钟
+     * @since v1.0.4
+     */
+    to_last_minute(): void;
+    /**
+     * 拨到下一分钟
+     * @since v1.0.4
+     */
+    to_next_minute(): void;
+    /**
+     * 拨到上一小时
+     * @since v1.0.4
+     */
+    to_last(): void;
+    /**
+     * 拨到下一小时
+     * @since v1.0.4
+     */
+    to_next(): void;
+    /**
+     * 设定为本地时间
+     * @since v1.0.4
+     */
     set_locale_time(): void;
     /**
      * 开始计时
@@ -630,12 +752,6 @@ declare class Hour {
      * @param params 回调的参数
      */
     start(func: Function, ...params: any[]): void;
-    set seconds(seconds: number);
-    get seconds(): number;
-    set minutes(minutes: number);
-    get minutes(): number;
-    set hours(hours: number);
-    get hours(): number;
     /**
      * 打印当前的小时值
      */
@@ -643,11 +759,13 @@ declare class Hour {
     /**
      * 返回当前的小时值字符串
      * @returns 被自动补 0 的 `小时:分钟:秒` 字符串
+     * @deprecated since v1.0.5 use getter value() instead.
      */
     get_value(): string;
     /**
      * 获取小时的数字值
      * @returns 表示当前计数小时的数值
+     * @deprecated since v1.0.7 use getter hours() instead.
      */
     get_hour(): number;
     /**
@@ -660,6 +778,57 @@ declare class Hour {
      * @returns 表示当前计数秒的数值
      */
     get_second(): number;
+    /**
+     * 存：秒值
+     * @param {number} seconds 要设置的秒值.
+     * @since v1.0.4
+     */
+    set seconds(seconds: number);
+    /**
+     * 获取上一小时对应的 Hour 对象实例
+     * @since v1.0.7
+     */
+    get last(): Hour;
+    /**
+     * 获取下一小时对应的 Hour 对象实例
+     * @since v1.0.7
+     */
+    get next(): Hour;
+    /**
+     * 取：秒值
+     * @returns {number} 当前实例的秒值
+     * @since v1.0.6
+     */
+    get seconds(): number;
+    /**
+     * 存：分值
+     * @param {number} seconds 要设置的分值.
+     * @since v1.0.4
+     */
+    set minutes(minutes: number);
+    /**
+     * 取：分值
+     * @returns {number} 当前实例的分值
+     * @since v1.0.6
+     */
+    get minutes(): number;
+    /**
+     * 存：小时值
+     * @param {number} seconds 要设置的小时值.
+     * @since v1.0.4
+     */
+    set hours(hours: number);
+    /**
+     * 取：小时值
+     * @returns {number} 当前实例的小时值
+     * @since v1.0.6
+     */
+    get hours(): number;
+    /**
+     * 返回当前的小时值字符串
+     * @since v1.0.5
+     */
+    get value(): string;
 }
 ```
 
@@ -881,15 +1050,15 @@ declare class Date_ {
      */
     is_leap_year(): boolean;
     /**
-     * 下一天（明天）
-     * @returns {Date_} 一个新的 Date_ 对象
+     * 时间拨到明天
+     * @since v_1.0.5
      */
-    next(): Date_;
+    to_next(): void;
     /**
-     * 上一天（昨天）
-     * @returns {Date_} 一个新的 Date_ 对象
+     * 时间拨到昨天
+     * @since v_1.0.5
      */
-    last(): Date_;
+    to_last(): void;
     /**
      * n 天前
      * @param {number} n 天数
@@ -903,52 +1072,17 @@ declare class Date_ {
      */
     ndays_later(n: number): Date_;
     /**
-     * 从当前开始，向后 n-1 个 Date_ 对象构成一个列表返回
-     * @param {number} n 天数
-     * @returns {Date_[]} n 天的 Date_ 对象 所构成的一个列表
-     */
-    ndaylist_next(n: number): Date_[];
-    /**
      * 从当前开始，向前 n-1 个 Date_ 对象构成一个列表返回
      * @param {number} n 天数
      * @returns {Date_[]} n 天的 Date_ 对象 所构成的一个列表
      */
     ndaylist_last(n: number): Date_[];
     /**
-     * 获取 年
-     * @since v1.0.6
+     * 从当前开始，向后 n-1 个 Date_ 对象构成一个列表返回
+     * @param {number} n 天数
+     * @returns {Date_[]} n 天的 Date_ 对象 所构成的一个列表
      */
-    get year(): number;
-    /**
-     * 设置 年
-     * @since v1.0.6
-     */
-    set year(year: number);
-    /**
-     * 获取 月
-     * @since v1.0.6
-     */
-    get month(): number;
-    /**
-     * 设置 月
-     * @since v1.0.6
-     */
-    set month(month: number);
-    /**
-     * 获取 日
-     * @since v1.0.6
-     */
-    get day(): number;
-    /**
-     * 设置 日
-     * @since v1.0.6
-     */
-    set day(day: number);
-    /**
-     * 获取日期字符串
-     * @since v1.0.6
-     */
-    get value(): string;
+    ndaylist_next(n: number): Date_[];
     /**
      * 获取日期字符串
      * @returns {string} 自动补 0 的日期字符串，例如 `2022/09/23`
@@ -956,7 +1090,52 @@ declare class Date_ {
      */
     get_value(): string;
     /**打印日期字符串 */
-    print(): string;
+    print(): void;
+    /**
+     * 返回后一天对应的新 Date_ 对象
+     * @returns {Date_} 一个新的 Date_ 对象
+     */
+    get next(): Date_;
+    /**
+     * 返回前一天对应的新 Date_ 对象
+     * @returns {Date_} 一个新的 Date_ 对象
+     */
+    get last(): Date_;
+    /**
+     * 获取 年
+     * @since v1.0.4
+     */
+    get year(): number;
+    /**
+     * 设置 年
+     * @since v1.0.4
+     */
+    set year(year: number);
+    /**
+     * 获取 月
+     * @since v1.0.4
+     */
+    get month(): number;
+    /**
+     * 设置 月
+     * @since v1.0.4
+     */
+    set month(month: number);
+    /**
+     * 获取 日
+     * @since v1.0.4
+     */
+    get day(): number;
+    /**
+     * 设置 日
+     * @since v1.0.4
+     */
+    set day(day: number);
+    /**
+     * 取：日期字符串
+     * @since v1.0.4
+     */
+    get value(): string;
 }
 ```
 
@@ -1332,7 +1511,7 @@ declare class DateTime {
      */
     to_last_second(): void;
     /**
-     * 下一秒，就地修改
+     * 拨到下一秒，就地修改
      */
     to_next_second(): void;
     /**
@@ -1353,12 +1532,8 @@ declare class DateTime {
     to_next_hour(): void;
     /** 昨天，就地修改 */
     to_last_day(): void;
-    /** 返回对应于昨天的 DateTime 对象 */
-    get last(): DateTime;
     /** 明天，就地修改 */
-    next_day(): void;
-    /** 返回对应于明天的 DateTime 对象 */
-    get next(): DateTime;
+    to_next_day(): void;
     /**下月，就地修改 */
     to_next_month(): void;
     /**明年，就地修改 */
@@ -1373,6 +1548,10 @@ declare class DateTime {
     print(): void;
     /**返回日期时间 */
     get_value(): string;
+    /** 返回对应于昨天的 DateTime 对象 */
+    get last(): DateTime;
+    /** 返回对应于明天的 DateTime 对象 */
+    get next(): DateTime;
 }
 ```
 
