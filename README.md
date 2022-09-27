@@ -396,10 +396,13 @@ s.start(()=>{
 取：以上一秒的时间返回一个新的 Second 对象
 
 ```ts
-
+let s = new Second(0);
+let last_second = s.last;
+last_second.print();
 ```
 `Out[]:`
 ```
+59
 ```
 
 
@@ -410,10 +413,13 @@ s.start(()=>{
 取：以下一秒的时间返回一个新的 Second 对象
 
 ```ts
-
+let s = new Second(59);
+let next_second = s.next;
+next_second.print();
 ```
 `Out[]:`
 ```
+00
 ```
 
 <div id="2-2-4-8"></div>
@@ -423,10 +429,13 @@ s.start(()=>{
 存：秒
 
 ```ts
-
+let s = new Second(0);
+s.seconds = 6;
+s.print();
 ```
 `Out[]:`
 ```
+06
 ```
 
 
@@ -437,12 +446,14 @@ s.start(()=>{
 取：秒
 
 ```ts
-
+let s = new Second(0);
+console.log(s.seconds);
 ```
 
 `Out[]:`
 
 ```
+0
 ```
 
 
@@ -456,10 +467,15 @@ s.start(()=>{
 >这个字符串的长度（length）为 2 ，如果（秒）数值只有一位，则自动在前面补一个 0 构成两位字符串
 
 ```ts
+let s = new Second(26);
+let v = s.value;
+console.log(v);
+```
+
+`Out[]:`
 
 ```
-`Out[]:`
-```
+26
 ```
 
 
