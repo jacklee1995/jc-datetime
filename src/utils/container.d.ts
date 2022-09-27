@@ -1,4 +1,4 @@
-export declare class List extends Array {
+declare class List extends Array {
     constructor(...args: any);
     append(elem: any): void;
     add(elem: any): void;
@@ -15,7 +15,6 @@ export declare class List extends Array {
      * @returns 该值第一次出现时对应的索引
      */
     first(x: any): number;
-    range(...args: [number?, number?, number?]): any | any[];
     /**
      * 查找所有值为 x 的元素的索引
      * @param x 要查找的那个值
@@ -33,8 +32,8 @@ export declare class List extends Array {
      * @returns
      */
     zip(ar: any[] | List): Map<any, any>;
+    toStringArray(): string[];
+    toString(): string;
+    print(): void;
 }
-export declare function range(x: number): number[];
-export declare function range(x: [number]): number[];
-export declare function range(x: [number, number]): number[];
-export declare function range(x: [number, number, number]): number[];
+export { List };

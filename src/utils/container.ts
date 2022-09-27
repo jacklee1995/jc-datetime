@@ -1,5 +1,7 @@
+import {isNumber, isString, isObject,strfyObj} from "./tools"
+
 declare type index = [a:number,b:number]
-export class List extends Array{
+class List extends Array {
   constructor(...args: any){
     if(args.length===1){
       super();
@@ -63,22 +65,6 @@ export class List extends Array{
     return index
   }
 
-  
-  range(...args:[number?,number?,number?]):any|any[]{
-    if(args.length===0){return new List()}
-    else if(args.length===1){
-      let a = new List()
-      return a.slice(args[0])
-    }
-    else if(args.length===2){
-      let a = new List()
-      return a.slice(args[0], args[1])
-    }
-    else{
-      
-    }
-  }
-
   /**
    * 查找所有值为 x 的元素的索引
    * @param x 要查找的那个值
@@ -128,39 +114,53 @@ export class List extends Array{
     }
     return mp
   }
+  toStringArray():string[]{
+    let _: string[] = []
+    this.forEach(e => {
+      if(isString(e)){
+        _.push(e.toString());
+      }
+      else if(isNumber(e)){
+        _.push(e.toString()); 
+      }
+      else if(isObject(e)){
+        _.push(strfyObj(e)); 
+      }
+      else{
+        _.push(e.toString());
+      }
+    });
+    return _;
+  }
+  toString(): string {
+    let str = "List:[";
+    
+    this.forEach(e => {
+      if(isString(e)){
+        str +=  "\""+e.toString()+"\", ";
+      }
+      else if(isNumber(e)){
+        str += e.toString()+", "; 
+      }
+      else if(isObject(e)){
+        str += "\n  " + strfyObj(e) +", "; 
+      }
+      else{
+        str += e.toString()+"\", ";
+      }
+    });
+    if(this.length >0){
+      str = str.slice(0, str.length-2);
+    }
+    str +=  "]"
+    return str;
+  }
+
+  print():void{
+    console.log(this.toString());
+  }
 }
 
-
-// range()函数的实现
-export function range(x:number):number[];                  // end
-export function range(x:[number]):number[];                // [end]
-export function range(x:[number, number]):number[];         // [start, end]
-export function range(x:[number, number, number]):number[];  // [start, end, step]
-export function range(x: string | number | any[]){
-    let ar:number[] = [];
-    if(typeof x ==='number'){
-      
-      for(let i=0; i<x; i++){
-        ar.push(i)
-      }
-    }else if(x instanceof Array){
-      if(x.length==1){
-          /**重载：传入数组只有1个元素 */
-          for(let i=0; i<x[0]; i++){
-              ar.push(i)
-          }
-
-      }else if(x.length == 2){
-          /**重载：传入2元素数组 */
-          for(let i=x[0]; i<x[1]; i++){
-              ar.push(i);
-          }
-      }else if(x.length==3){
-          /**重载：传入3元素数组 */
-          for(let i=x[0]; i<x[1]; i+=x[2]){
-              ar.push(i);
-          }
-      }
-    }
-    return ar;
+export {
+    List
 }

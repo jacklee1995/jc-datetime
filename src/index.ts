@@ -8,13 +8,11 @@
  Licensed under the MIT License.
 *****************************************************************************/
 
-import { List, range } from "./utils"
+import { ValueError } from "./utils/abnormal";
+import { List } from "./utils/container";
+import { range,zeroFill } from "./utils/tools";
 
-class ValueError {
-    constructor(s:string){
-        throw "[Valueerror]: "+s
-    }
-}
+
 
 class StaticFuncs {
     /**
@@ -244,9 +242,11 @@ enum CarryEnum {
     BACK = 2      // 有退位
 }
 
-// 进位器 
+/**
+ * 进位器，用于描述各中计数器的进位状态
+ */
 class Carry{
-    _value
+    private _value
     constructor(b: CarryEnum | undefined=undefined){
         if(b == undefined) {
             this._value = CarryEnum.NONE;
@@ -270,16 +270,43 @@ class Carry{
         this._value =CarryEnum.NONE;
     }
 
-    // 获取进位器状态 
-    get_state():number{
+    /**
+     * 获取进位器状态枚举数值
+     * @deprecated since v1.0.7, please use getter state() instead.
+     * @returns {number} v 进位枚举数值
+     */
+     get_state():number{
+        return this._value;
+    }
+
+    /**
+     * 获取进位器状态枚举数值
+     */
+    get state():number{
         return this._value;
     }
 }
 
-//秒计数器
-class Second{
-    private _value:number=0
-    c:Carry;
+interface Counter{
+    // private _value:number;
+    c: Carry;
+    to_last():void;
+    to_next():void;
+    start(func:Function, ...params:any[]):void;
+    print():void;
+    get last():any;
+    get next():any;
+    get value():string;
+    get seconds():number;
+    set seconds(seconds: number);
+}
+
+/**
+ * 秒计数器
+ */
+class Second implements Counter {
+    private _value: number = 0
+    c: Carry
 
     /**
      * @param s 初始秒数，范围为 0~59
@@ -294,8 +321,21 @@ class Second{
         }
         this._value = parseInt(s.toString());
     }
+
+    /** 将时间拨到上一秒 */
+    to_last():void{
+        // 已到 0
+        if(this._value <= 0){
+            this._value = 59;   // 置满
+            this.c.set_back();  // 标志退位
+        }
+        else{
+            this._value = this._value - 1;
+        }
+    }
+
     /**
-     * 拨到下一秒
+     * 将时间拨到下一秒
      */ 
     to_next():void{
         // 已达 59
@@ -305,18 +345,6 @@ class Second{
         }
         else{
             this._value = this._value + 1;
-        }
-    }
-
-    /**拨到上一秒 */
-    to_last():void{
-        // 已到 0
-        if(this._value <= 0){
-            this._value = 59;   // 置满
-            this.c.set_back();  // 标志退位
-        }
-        else{
-            this._value = this._value - 1;
         }
     }
 
@@ -335,27 +363,7 @@ class Second{
 
     /**打印秒计数值 */
     print():void{
-        let s = this._value.toString();
-        if(s.length === 1){
-            s = "0" + s;
-        }
-        console.log(s);
-    }
-
-    set seconds(seconds:number){
-        this._value = seconds;
-    }
-
-    get seconds(){
-        return this._value;
-    }
-
-    get value():string{
-        let s = this._value.toString();
-        if(s.length === 1){
-            s = "0" + s;
-        }
-        return  s;
+        console.log(this.value);
     }
 
     /**
@@ -364,19 +372,61 @@ class Second{
      * @deprecated since v1.0.4, use getter value() instead.
      */
     get_value():string{
-        let s = this._value.toString();
-        if(s.length === 1){
-            s = "0" + s;
-        }
-        return  s;
+        return zeroFill(this._value)
+    }
+
+    /**
+     * 取：以上一秒的时间返回一个新的 Second 对象
+     * @return {Second} 一个新的 Second 对象实例
+     * @since 1.0.7
+     */ 
+     get last():Second {
+        let s = new Second(this._value);
+        s.to_last();
+        return s;
+    }
+
+    /**
+     * 取：以下一秒的时间返回一个新的 Second 对象
+     * @return {Second} 一个新的 Second 对象实例
+     * @since 1.0.7
+     */ 
+    get next():Second {
+        let s = new Second(this._value);
+        s.to_next();
+        return s;
+    }
+
+    /**
+     * 存：秒
+     * @param {number} seconds 将更改的秒的数值
+     */
+    set seconds(seconds:number){
+        this._value = seconds;
+    }
+    
+    /**
+     * 取：秒
+     * @return {number} 将被去除的当前的秒值
+     */
+    get seconds():number{
+        return this._value;
+    }
+
+    /**
+     * 取：当前（秒）值字符串
+     * 这个字符串的长度（length）为 2 ，如果（秒）数值只有一位，则自动在前面补一个 0 构成两位字符串
+     */
+    get value():string{
+        return zeroFill(this._value)
     }
 }
 
 /**分计数器 */
-class Minute {
-    private _value:number=0;             // 分针位
-    c:Carry;                     // 进位
-    private _second:Second;               // 秒针位
+class Minute implements Counter {
+    private _value:number=0;           // 分针位
+    private _second:Second;            // 秒针位
+    public c:Carry;                    // 进位
     
     /**
      * @param {number} m 分值
@@ -402,23 +452,10 @@ class Minute {
     }
 
     /**
-     * 正向行走（分针，即下一分钟） 
+     * 将时间拨到上一分钟
+     * @since v1.0.7
      */
-    next():void{
-        // 已达 59
-        if(this._value >= 59){
-            this._value = 0;     // 置空
-            this.c.set();        // 标志进位
-        }
-        else{
-            this._value = this._value + 1;
-        }
-    }
-
-    /**
-     * 逆向行走（分针，即上一分钟） 
-     */
-    last():void{
+    to_last():void{
         // 已到 0
         if(this._value <= 0){
             this._value = 59;   // 置满
@@ -430,83 +467,56 @@ class Minute {
     }
 
     /**
-     * 正向行走（秒针，即下一秒） 
+     * 将时间拨到下一分钟
+     * @since v1.0.7
      */
-    next_second():void{
+    to_next():void{
+        // 已达 59
+        if(this._value >= 59){
+            this._value = 0;     // 置空
+            this.c.set();        // 标志进位
+        }
+        else{
+            this._value = this._value + 1;
+        }
+    }
+
+    /**
+     * 将时间拨到上一秒钟
+     */
+    to_last_second():void{
+        // 直接调用 Second 类的上一秒
+        this._second.to_last();
+        // 判断退位
+        if(this._second.c.state === CarryEnum.BACK){
+            // 先完成退位
+            this.to_last();
+            // 再将进位标志清空
+            this._second.c.clear();
+        }
+    }
+
+    /**
+     * 将时间拨到下一秒 钟
+     */
+    to_next_second():void{
         // 直接调用 Second 类的下一秒
         this._second.to_next();
         
         // 判断进位
-        if(this._second.c.get_state() === CarryEnum.CARRY){
+        if(this._second.c.state === CarryEnum.CARRY){
             // 先完成进位
-            this.next();
+            this.to_next();
             // 再将进位标志清空
             this._second.c.clear();
         }
-    }
-
-    /**
-     * 逆向行走（秒针，即上一秒） 
-     */
-    last_second():void{
-        // 直接调用 Second 类的上一秒
-        this._second.to_last();
-        // 判断退位
-        if(this._second.c.get_state() === CarryEnum.BACK){
-            // 先完成退位
-            this.last();
-            // 再将进位标志清空
-            this._second.c.clear();
-        }
-    }
-
-    /**
-     * 设置秒
-     * @param {number} seconds Number of seconds.
-     * @since v1.0.4
-     */
-    set seconds(seconds:number){
-        this._second.seconds = seconds;
-    }
-
-    /**
-     * 获取秒
-     * @since v1.0.4
-     */
-    get seconds():number{
-        return this._second.seconds;
-    }
-
-    /**
-     * 设置分
-     * @param {number} seconds Number of minutes.
-     * @since v1.0.4
-     */
-    set minutes(minutes:number){
-        this._value = minutes;
-    }
-
-    /**
-     * 获取分
-     * @since v1.0.4
-     */
-    get minutes():number{
-        return this._value;
     }
 
     /**
      * 打印当前的分计数值
      */
     print():void{
-        let m = this._value.toString();
-        if(m.length === 1){
-            m = "0" + m;
-        }
-        let s = this._second.value.toString();
-        if(s.length === 1){
-            s = "0" + s;
-        }
-        console.log(m + ":" + s);
+        console.log(this.value);
     }
 
     /**
@@ -515,63 +525,7 @@ class Minute {
      * @deprecated use getter value() instead.
      */
     get_value():string{
-        let m = this._value.toString();
-        let s = this._second.value.toString();
-        if(m.length === 1){
-            m = "0" + m;
-        }
-        if(s.length === 1){
-            s = "0" + s;
-        }
-        return  m + ":" + s;
-    }
-
-    /**
-     * 输出当前的分计数值
-     * @returns 被自动补零的 `分:秒` 字符串
-     */
-    get value():string{
-        let m = this._value.toString();
-        let s = this._second.value.toString();
-        if(m.length === 1){
-            m = "0" + m;
-        }
-        if(s.length === 1){
-            s = "0" + s;
-        }
-        return  m + ":" + s;
-    }
-
-    /**
-     * 返回分数值
-     * @deprecated since v1.0.4
-     */
-    get_minute():number{
-        return this._value;
-    }
-
-    get minute():number{
-        return this._value;
-    }
-
-    set minute(minute:number){
-        this._value = minute;
-    }
-
-    /**
-     * 返回秒数值 
-     * @deprecated since v1.0.4
-     */
-    get_second():number{
-        return parseInt(this._second.get_value());
-    }
-
-    get second():number{
-        return this._value;
-    }
-
-    set second(second:number){
-        this._second.seconds = second;
+        return  zeroFill(this._value) + ":" + this._second.value.toString();
     }
 
     /**
@@ -582,17 +536,83 @@ class Minute {
     start(func: Function, ...params: any[]):void{
         let that = this;
         setInterval((...params:any) => {
-            that.next_second();
+            that.to_next_second();
             func(...params);
         },1000,...params);
+    }
+
+    /**
+     * 获取上一分钟对应的 Minute 对象实例
+     * 注意：该接口在 v1.0.6及以前，功能是将当前 Minute 对象实例 拨到下一分钟，并且不会返回任何值
+     * @since v1.0.7
+     */
+     get last():Minute {
+        let m = new Minute(this._value, this._second.seconds);
+        m.c = this.c;
+        m.to_last();
+        return m;
+    }
+
+    /**
+     * 获取下一分钟对应的 Minute 对象实例
+     * 注意：该接口在 v1.0.6及以前，功能是将当前 Minute 对象实例 拨到下一分钟，并且不会返回任何值
+     * @since v1.0.7
+     */
+     get next():Minute {
+        let m = new Minute(this._value, this._second.seconds);
+        m.c = this.c;
+        m.to_next();
+        return m;
+    }
+
+    /**
+     * 存：秒值
+     * @param {number} seconds Number of seconds.
+     * @since v1.0.4
+     */
+    set seconds(seconds:number){
+        this._second.seconds = seconds;
+    }
+
+    /**
+     * 取：秒值
+     * @since v1.0.4
+     */
+    get seconds():number{
+        return this._second.seconds;
+    }
+
+    /**
+     * 存：分值
+     * @param {number} seconds Number of minutes.
+     * @since v1.0.4
+     */
+    set minutes(minutes:number){
+        this._value = minutes;
+    }
+
+    /**
+     * 取：分值
+     * @since v1.0.4
+     */
+    get minutes():number{
+        return this._value;
+    }
+
+    /**
+     * 输出当前的分计数值
+     * @returns 被自动补零的 `分:秒` 字符串
+     */
+    get value():string{
+        return  zeroFill(this._value) + ":" + this._second.value.toString();
     }
 }
 
 /**时计数器 */
-class Hour {
-    private _value:number = 0;                    // 时针位
-    c:Carry = new Carry();                // 进位
-    minute:Minute;                        // 分针位（带秒位）
+class Hour implements Counter {
+    private _value: number = 0;                    // 时针位
+    private _minute: Minute;                       // 分针位（带秒位）
+    public c: Carry = new Carry();                 // 进位
 
     constructor(time: string);
     constructor(time: []);
@@ -606,7 +626,7 @@ class Hour {
             let _dt = new Date();
 
             // 初始化秒位引用对象
-            this.minute = new Minute(_dt.getMinutes(), _dt.getSeconds());
+            this._minute = new Minute(_dt.getMinutes(), _dt.getSeconds());
             
             // 设置小时初值
             this._value = _dt.getHours();
@@ -616,7 +636,7 @@ class Hour {
             let [hours, minutes, seconds] = time.split(":");
             
             // 初始化秒位引用对象
-            this.minute = new Minute(parseInt(minutes), parseInt(seconds));
+            this._minute = new Minute(parseInt(minutes), parseInt(seconds));
             
             // 设置小时初值
             this._value = parseInt(hours);
@@ -632,78 +652,85 @@ class Hour {
                 new ValueError("Hours must be less than or equal to 59.")
             }
             // 初始化秒位引用对象
-            this.minute = new Minute(minutes, seconds);
+            this._minute = new Minute(minutes, seconds);
 
             // 设置小时初值
             this._value =  hours as number;
         }
         else{
-            this.minute = new Minute(0,0);
+            this._minute = new Minute(0,0);
             let f_param_type = typeof time[0];
             new ValueError("Type of first param is: "+f_param_type)
         }
     }
-
-    private _zero_fill(s: string|number){
-        let _="";
-        if (typeof s === "number"){_ = s.toString()}
-        return (_.length === 1)?("0"+s):s;
-    }
     
-    /**拨到上一秒 */ 
+    /**
+     * 拨到上一秒
+     * @since v1.0.4
+     */
     to_last_second():void {
         // 调用分钟上一秒方法
-        this.minute.last_second()
+        this._minute.to_last_second()
         // 只需要观察分种是否退位
-        if(this.minute.c._value === CarryEnum.BACK){
+        if(this._minute.c.state === CarryEnum.BACK){
             // 先求上一小时
             this.to_last();
             // 再清空分钟的进位标志
-            this.minute.c.clear()
-        }
-    }
-
-    /**拨到下一秒 */ 
-    to_next_second():void {
-        // 掉用分的下一秒方法
-        this.minute.next_second();
-        // 只需要观察分种是否进位
-        if(this.minute.c._value === CarryEnum.CARRY){
-            // 先进位到小时，即求下一小时
-            this.to_next();
-            // 再清空分钟的进位标志
-            this.minute.c.clear()
-        }
-    }
-
-    /** 拨到上一分钟 */
-    to_last_minute():void {
-        // 掉用分的上一分钟方法
-        this.minute.last();
-        // 只需要观察分种是否退位
-        if(this.minute.c._value === CarryEnum.BACK){
-            // 先求上一小时
-            this.to_last();
-            // 再清空分钟的进位标志
-            this.minute.c.clear()
-        }
-    }
-
-    /** 拨到下一分钟 */ 
-    to_next_minute():void {
-        // 掉用分的下一分钟方法
-        this.minute.next();
-        // 只需要观察分种是否进位
-        if(this.minute.c._value === CarryEnum.CARRY){
-            // 先进位到小时，即求下一小时
-            this.to_next();
-            // 再清空分钟的进位标志
-            this.minute.c.clear()
+            this._minute.c.clear()
         }
     }
 
     /**
+     * 拨到下一秒
+     * @since v1.0.4
+     */ 
+    to_next_second():void {
+        // 掉用分的下一秒方法
+        this._minute.to_next_second();
+        // 只需要观察分种是否进位
+        if(this._minute.c.state === CarryEnum.CARRY){
+            // 先进位到小时，即求下一小时
+            this.to_next();
+            // 再清空分钟的进位标志
+            this._minute.c.clear()
+        }
+    }
+
+    /**
+     * 拨到上一分钟
+     * @since v1.0.4
+     */
+    to_last_minute():void {
+        // 掉用分的上一分钟方法
+        this._minute.to_last();
+        // 只需要观察分种是否退位
+        if(this._minute.c.state === CarryEnum.BACK){
+            // 先求上一小时
+            this.to_last();
+            // 再清空分钟的进位标志
+            this._minute.c.clear()
+        }
+    }
+
+    /**
+     * 拨到下一分钟
+     * @since v1.0.4
+     */ 
+    to_next_minute():void {
+        // 掉用分的下一分钟方法
+        this._minute.to_next();
+        // 只需要观察分种是否进位
+        if(this._minute.c.state === CarryEnum.CARRY){
+            // 先进位到小时，即求下一小时
+            this.to_next();
+            // 再清空分钟的进位标志
+            this._minute.c.clear()
+        }
+    }
+
+    /** 
      * 拨到上一小时
+     * @since v1.0.4
      */
      to_last():void{
         // 已到 0
@@ -716,7 +743,10 @@ class Hour {
         }
     }
 
-    /** 拨到下一小时 */
+    /** 
+     * 拨到下一小时
+     * @since v1.0.4
+     */
     to_next():void{
         // 已达 59
         if(this._value >= 59){
@@ -728,12 +758,15 @@ class Hour {
         }
     }
 
-    /**设定为本地时间 */
+    /**
+     * 设定为本地时间
+     * @since v1.0.4
+     */
     set_locale_time():void{
         let [h,m,s] = Date().toString().split(" ")[4].split(":")
         this._value = parseInt(h);
-        this.minute.minutes = parseInt(m);
-        this.minute.seconds = parseInt(s);
+        this._minute.minutes = parseInt(m);
+        this._minute.seconds = parseInt(s);
     }
 
     /**
@@ -749,35 +782,11 @@ class Hour {
         },1000,...params);
     }
 
-    set seconds(seconds:number){
-        this.minute.seconds = seconds;
-    }
-
-    get seconds(){
-        return this.minute.seconds;
-    }
-
-    set minutes(minutes:number){
-        this.minute.minutes = minutes;
-    }
-
-    get minutes(){
-        return this.minute.minutes;
-    }
-
-    set hours(hours:number){
-        this._value = hours;
-    }
-
-    get hours(){
-        return this._value;
-    }
-
     /**
      * 打印当前的小时值
      */
     print():void{
-        let temp = this._zero_fill(this._value) + ":" + this.minute.value;
+        let temp = zeroFill(this._value) + ":" + this._minute.value;
         console.log(temp);
     }
 
@@ -787,23 +796,14 @@ class Hour {
      * @deprecated since v1.0.5 use getter value() instead.
      */
     get_value():string{
-        return this._zero_fill(this._value) + ":" + this.minute.value;
+        return zeroFill(this._value) + ":" + this._minute.value;
     }
-    /**
-     * 返回当前的小时值字符串
-     * @since v1.0.5
-     */
-    get value():string{
-        let h = (this._value).toString();
-        if(h.length === 1){
-            h = "0" + h;
-        }
-        return h + ":" + this.minute.value;
-    }
+
 
     /**
      * 获取小时的数字值
      * @returns 表示当前计数小时的数值
+     * @deprecated since v1.0.7 use getter hours() instead.
      */
     get_hour():number{
         return this._value;
@@ -814,7 +814,7 @@ class Hour {
      * @returns 表示当前计数分钟的数值
      */
     get_minute():number{
-        return this.minute.get_minute();
+        return this._minute.minutes;
     }
 
     /**
@@ -822,16 +822,97 @@ class Hour {
      * @returns 表示当前计数秒的数值
      */
     get_second():number{
-        return this.minute.get_second();
+        return this._minute.seconds;
+    }
+    
+    /**
+     * 存：秒值
+     * @param {number} seconds 要设置的秒值.
+     * @since v1.0.4
+     */
+    set seconds(seconds:number){
+        this._minute.seconds = seconds;
+    }
+
+    /**
+     * 获取上一小时对应的 Hour 对象实例
+     * @since v1.0.7
+     */
+    get last():Hour{
+        let h = new Hour([this._value, this._minute.minutes, this._minute.seconds]);
+        h.to_last();
+        return h;
+    }
+
+    /**
+     * 获取下一小时对应的 Hour 对象实例
+     * @since v1.0.7
+     */
+    get next():Hour{
+        let h = new Hour([this._value, this._minute.minutes, this._minute.seconds]);
+        h.to_next();
+        return h;
+    }
+
+    /**
+     * 取：秒值
+     * @returns {number} 当前实例的秒值
+     * @since v1.0.6
+     */
+    get seconds():number{
+        return this._minute.seconds;
+    }
+
+    /**
+     * 存：分值
+     * @param {number} seconds 要设置的分值.
+     * @since v1.0.4
+     */
+    set minutes(minutes:number){
+        this._minute.minutes = minutes;
+    }
+
+    /**
+     * 取：分值
+     * @returns {number} 当前实例的分值
+     * @since v1.0.6
+     */
+    get minutes():number{
+        return this._minute.minutes;
+    }
+
+    /**
+     * 存：小时值
+     * @param {number} seconds 要设置的小时值.
+     * @since v1.0.4
+     */
+    set hours(hours:number){
+        this._value = hours;
+    }
+
+    /**
+     * 取：小时值
+     * @returns {number} 当前实例的小时值
+     * @since v1.0.6
+     */
+    get hours():number{
+        return this._value;
+    }
+    /**
+     * 返回当前的小时值字符串
+     * @since v1.0.5
+     */
+     get value():string{
+        return zeroFill(this._value) + ":" + this._minute.value;
     }
 
 }
 
 /**日期计数器  */
 class Date_ {
-    private _year:number
-    private _month:number
-    private _day:number
+    private _year: number
+    private _month: number
+    private _day: number
 
     /**
      * 使用当前的系统时间构造日期对象
@@ -915,12 +996,6 @@ class Date_ {
         }
     }
 
-    private _zero_fill(s: string|number){
-        let _="";
-        if (typeof s === "number"){_ = s.toString()}
-        return (_.length === 1)?("0"+s):s;
-    }
-
     /**
      * 返回当前年份是否是闰年 
      * @returns 一个表示是否是闰年的布尔值
@@ -934,53 +1009,11 @@ class Date_ {
     }
 
     /**
-     * 返回后一天对应的新 Date_ 对象
-     * @returns {Date_} 一个新的 Date_ 对象 
-     */
-    get next():Date_{
-        let yearmonth = this.year.toString() + "/" + this.month.toString();
-        let days = StaticFuncs.get_days(yearmonth) as number;
-        
-        if(this.day < days) {
-            let next_day = this.day +1;
-            let next_month = this.month;
-            let next_year = this.year;
-            return new Date_([next_year, next_month, next_day]);
-        }
-        else if (this.day === days) {
-            let next_day = "01";
-            if(this.month < 1){
-                new ValueError("An impossible year, which is less than 1.")
-            }
-            else if(this.month < 12) {
-                let next_month = (this.month+1);
-                let this_year = this.year;
-                return new Date_([this_year, next_month, parseInt(next_day)]);
-            }
-            else if(this.month === 12){
-                let next_month = "01";
-                let next_year = (this.year + 1).toString();
-                return new Date_([parseInt(next_year), parseInt(next_month), parseInt(next_day)]);
-            }
-            else{
-                new ValueError("An impossible year, which is greater than 12.")
-            }
-            
-        }
-        else{
-            new ValueError("An impossible date, which is greater than the number of days in the month.")
-        }
-        return new Date_([0, 13, 32]);
-    }
-
-    /**
      * 时间拨到明天
      * @since v_1.0.5
      */
     to_next():void{
-        let yearmonth = this.year.toString() + "/" + this.month.toString();
-        let days = StaticFuncs.get_days(yearmonth) as number;
-        
+        let days = StaticFuncs.get_days(this.year.toString() + "/" + this.month.toString()) as number;
         if(this.day < days) {
             this._day = this.day +1;
             this._month = this.month;
@@ -1002,7 +1035,6 @@ class Date_ {
             else{
                 new ValueError("An impossible year, which is greater than 12.")
             }
-            
         }
         else{
             new ValueError("An impossible date, which is greater than the number of days in the month.")
@@ -1010,53 +1042,11 @@ class Date_ {
     }
 
     /**
-     * 返回前一天对应的新 Date_ 对象
-     * @returns {Date_} 一个新的 Date_ 对象
-     */
-    get last():Date_{
-        if (this.day != 1) {
-
-            let last_day = (this.day - 1).toString()
-            let last_month = this.month.toString();
-            let last_year = this.year.toString();
-
-            return new Date_([parseInt(last_year), parseInt(last_month), parseInt(last_day)])
-        }
-        // this.day === 1
-        else{
-            if(this.month != 1){
-
-                let last_month = (this.month -1).toString();
-                if(last_month.length === 1){
-                    last_month = '0' + last_month;
-                }
-
-                let last_year = this.year.toString();
-                let yearmonth = last_year + "/" + last_month;
-                let days = StaticFuncs.get_days(yearmonth) as number;
-                let last_day = days.toString();
-
-                return new Date_([parseInt(last_year), parseInt(last_month), parseInt(last_day)])
-            }
-            // this.month === 1
-            else{
-                let last_month = "12";
-                let last_year = (this.year-1).toString();
-                let yearmonth = this.year.toString() + "/" + this.month.toString();
-                let days = StaticFuncs.get_days(yearmonth) as number;
-                let last_day = days.toString();
-                return new Date_([parseInt(last_year), parseInt(last_month), parseInt(last_day)]);
-            }
-        }
-    }
-
-    /**
      * 时间拨到昨天
      * @since v_1.0.5
      */
-    to_last():void{
+     to_last():void{
         if (this.day != 1) {
-            
             this._day = this.day - 1;
             this._month = this.month;
             this._year = this.year;
@@ -1064,12 +1054,10 @@ class Date_ {
         // this.day === 1
         else{
             if(this.month != 1){
-
                 let last_month = (this.month -1).toString();
                 if(last_month.length === 1){
                     last_month = '0' + last_month;
                 }
-
                 let last_year = this.year;
                 let yearmonth = last_year + "/" + last_month;
                 let days = StaticFuncs.get_days(yearmonth) as number;
@@ -1119,6 +1107,21 @@ class Date_ {
     }
 
     /**
+     * 从当前开始，向前 n-1 个 Date_ 对象构成一个列表返回 
+     * @param {number} n 天数
+     * @returns {Date_[]} n 天的 Date_ 对象 所构成的一个列表
+     */
+     ndaylist_last(n:number):Date_[]{
+        let today = new Date_([this.year, this.month, this.day]);
+        let temp = new List();
+        for (let i in range(n)) { 
+            temp.add(today);
+            today = today.last;
+        }
+        return temp
+    }
+
+    /**
      * 从当前开始，向后 n-1 个 Date_ 对象构成一个列表返回 
      * @param {number} n 天数
      * @returns {Date_[]} n 天的 Date_ 对象 所构成的一个列表
@@ -1134,18 +1137,100 @@ class Date_ {
     }
 
     /**
-     * 从当前开始，向前 n-1 个 Date_ 对象构成一个列表返回 
-     * @param {number} n 天数
-     * @returns {Date_[]} n 天的 Date_ 对象 所构成的一个列表
+     * 获取日期字符串
+     * @returns {string} 自动补 0 的日期字符串，例如 `2022/09/23`
+     * @deprecated since v1.03, please use getter value() instead
      */
-    ndaylist_last(n:number):Date_[]{
-        let today = new Date_([this.year, this.month, this.day]);
-        let temp = new List();
-        for (let i in range(n)) { 
-            temp.add(today);
-            today = today.last;
+    get_value():string{
+        return this.year.toString() + "/" + zeroFill(this._month) + "/" +  zeroFill(this._day);
+    }
+
+    /**打印日期字符串 */
+    print():void{
+        let temp = this.year.toString() + "/" + zeroFill(this._month) + "/" +  zeroFill(this._day);
+        console.log(temp);
+    }
+
+    /**
+     * 返回后一天对应的新 Date_ 对象
+     * @returns {Date_} 一个新的 Date_ 对象 
+     */
+     get next():Date_{
+        let yearmonth = this.year.toString() + "/" + this.month.toString();
+        let days = StaticFuncs.get_days(yearmonth) as number;
+        
+        if(this.day < days) {
+            let next_day = this.day +1;
+            let next_month = this.month;
+            let next_year = this.year;
+            return new Date_([next_year, next_month, next_day]);
         }
-        return temp
+        else if (this.day === days) {
+            let next_day = "01";
+            if(this.month < 1){
+                new ValueError("An impossible year, which is less than 1.")
+            }
+            else if(this.month < 12) {
+                let next_month = (this.month+1);
+                let this_year = this.year;
+                return new Date_([this_year, next_month, parseInt(next_day)]);
+            }
+            else if(this.month === 12){
+                let next_month = "01";
+                let next_year = (this.year + 1).toString();
+                return new Date_([parseInt(next_year), parseInt(next_month), parseInt(next_day)]);
+            }
+            else{
+                new ValueError("An impossible year, which is greater than 12.")
+            }
+            
+        }
+        else{
+            new ValueError("An impossible date, which is greater than the number of days in the month.")
+        }
+        return new Date_([0, 13, 32]);
+    }
+
+
+    /**
+     * 返回前一天对应的新 Date_ 对象
+     * @returns {Date_} 一个新的 Date_ 对象
+     */
+    get last():Date_{
+        if (this.day != 1) {
+
+            let last_day = (this.day - 1).toString()
+            let last_month = this.month.toString();
+            let last_year = this.year.toString();
+
+            return new Date_([parseInt(last_year), parseInt(last_month), parseInt(last_day)])
+        }
+        // this.day === 1
+        else{
+            if(this.month != 1){
+
+                let last_month = (this.month -1).toString();
+                if(last_month.length === 1){
+                    last_month = '0' + last_month;
+                }
+
+                let last_year = this.year.toString();
+                let yearmonth = last_year + "/" + last_month;
+                let days = StaticFuncs.get_days(yearmonth) as number;
+                let last_day = days.toString();
+
+                return new Date_([parseInt(last_year), parseInt(last_month), parseInt(last_day)])
+            }
+            // this.month === 1
+            else{
+                let last_month = "12";
+                let last_year = (this.year-1).toString();
+                let yearmonth = this.year.toString() + "/" + this.month.toString();
+                let days = StaticFuncs.get_days(yearmonth) as number;
+                let last_day = days.toString();
+                return new Date_([parseInt(last_year), parseInt(last_month), parseInt(last_day)]);
+            }
+        }
     }
 
     /**
@@ -1192,34 +1277,11 @@ class Date_ {
     }
 
     /**
-     * 获取日期字符串
+     * 取：日期字符串
      * @since v1.0.4
      */
     get value():string{
-        let m = this.month.toString()
-        if(m.length === 1){
-            m = "0" + m;
-        }
-        let d = this.day.toString()
-        if(d.length === 1){
-            d = "0" + d;
-        }
-        return this.year.toString() + "/" + m + "/" + d;
-    }
-
-    /**
-     * 获取日期字符串
-     * @returns {string} 自动补 0 的日期字符串，例如 `2022/09/23`
-     * @deprecated since v1.03, please use getter value() instead
-     */
-    get_value():string{
-        return this.year.toString() + "/" + this._zero_fill(this._month) + "/" +  this._zero_fill(this._day);
-    }
-
-    /**打印日期字符串 */
-    print():void{
-        let temp = this.year.toString() + "/" + this._zero_fill(this._month) + "/" +  this._zero_fill(this._day);
-        console.log(temp);
+        return this.year.toString() + "/" + zeroFill(this._month) + "/" +  zeroFill(this._day);
     }
 }
 
@@ -1266,7 +1328,7 @@ class DateTime {
     to_last_second():void{
         this.time.to_last_second();
         // 若产生退位
-        if(this.time.c._value === CarryEnum.BACK){
+        if(this.time.c.state === CarryEnum.BACK){
             // 完成从时间到日期的退位
             this.date.to_last();
             // 清空退位标志
@@ -1279,7 +1341,7 @@ class DateTime {
      */
     to_next_second():void{
         this.time.to_next_second();
-        if(this.time.c._value === CarryEnum.CARRY){
+        if(this.time.c.state === CarryEnum.CARRY){
             this.date.to_next();
             this.time.c.clear();
         }
@@ -1290,7 +1352,7 @@ class DateTime {
      */
     to_last_minute():void{
         this.time.to_last_minute();
-        if(this.time.c._value === CarryEnum.BACK){
+        if(this.time.c.state === CarryEnum.BACK){
             this.date.to_last();
             this.time.c.clear();
         }
@@ -1301,7 +1363,7 @@ class DateTime {
      */ 
     to_next_minute():void{
         this.time.to_next_minute();
-        if(this.time.c._value === CarryEnum.CARRY){
+        if(this.time.c.state === CarryEnum.CARRY){
             this.date.to_next();
             this.time.c.clear();
         }
@@ -1313,7 +1375,7 @@ class DateTime {
     to_last_hour():void{
         this.time.to_last();
         // 若产生退位
-        if(this.time.c._value === CarryEnum.BACK){
+        if(this.time.c.state === CarryEnum.BACK){
             // 完成从时间到日期的退位
             this.date.to_last();
             // 清空退位标志
@@ -1326,7 +1388,7 @@ class DateTime {
      */
     to_next_hour():void{
         this.time.to_next();
-        if(this.time.c._value === CarryEnum.CARRY){
+        if(this.time.c.state === CarryEnum.CARRY){
             this.date.to_next();
             this.time.c.clear();
         }
@@ -1337,19 +1399,9 @@ class DateTime {
         this.date.to_last();
     }
 
-    /** 返回对应于昨天的 DateTime 对象 */
-    get last():DateTime{
-        return new DateTime([this.date.last, this.time])
-    }
-
     /** 明天，就地修改 */
     to_next_day():void{
         this.date.to_next();
-    }
-
-    /** 返回对应于明天的 DateTime 对象 */
-    get next():DateTime{
-        return new DateTime([this.date.next, this.time])
     }
 
     /**下月，就地修改 */
@@ -1400,12 +1452,21 @@ class DateTime {
 
     /**打印日期时间 */
     print():void{
-        console.log(this.date.get_value() + " " + this.time.get_value());
+        console.log(this.date.value + " " + this.time.value);
     }
 
     /**返回日期时间 */
     get_value():string{
-        return this.date.get_value() + " " + this.time.get_value();
+        return this.date.value + " " + this.time.value;
+    }
+    
+    /** 返回对应于昨天的 DateTime 对象 */
+    get last():DateTime{
+        return new DateTime([this.date.last, this.time])
+    }
+    /** 返回对应于明天的 DateTime 对象 */
+    get next():DateTime{
+        return new DateTime([this.date.next, this.time])
     }
 }
 
