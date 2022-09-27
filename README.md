@@ -794,13 +794,15 @@ m.start(()=>{
 >该接口在 v1.0.6及以前，功能是将当前 Minute 对象实例 拨到下一分钟，并且不会返回任何值
 
 ```ts
-
+let m = new Minute(27,25);
+let last_minute = m.last;
+last_minute.print()
 ```
 
 `Out[]:`
 
 ```
-
+26:25
 ```
 
 
@@ -814,13 +816,17 @@ m.start(()=>{
 >该接口在 v1.0.6及以前，功能是将当前 Minute 对象实例 拨到下一分钟，并且不会返回任何值
 
 ```ts
-
+let m = new Minute(59,56);
+let last_minute = m.next;
+last_minute.print()
+console.log(last_minute.c.state);
 ```
 
 `Out[]:`
 
 ```
-
+00:56
+1
 ```
 
 
@@ -831,13 +837,15 @@ m.start(()=>{
 存：秒值
 
 ```ts
-
+let m = new Minute(52,56);
+m.seconds = 25;             // setter
+console.log(m.seconds);     // getter
 ```
 
 `Out[]:`
 
 ```
-
+25
 ```
 
 
@@ -847,15 +855,7 @@ m.start(()=>{
 
 取：秒值
 
-```ts
-
-```
-
-`Out[]:`
-
-```
-
-```
+参考 [2.3.4.10 setter seconds](#2-3-4-10) 中给出的案例。
 
 
 <div id="2-3-4-12"></div>
@@ -865,13 +865,15 @@ m.start(()=>{
 存：分值
 
 ```ts
-
+let m = new Minute(56,56);
+m.minutes = 25;            // setter
+console.log(m.minutes);    // getter
 ```
 
 `Out[]:`
 
 ```
-
+25
 ```
 
 
@@ -879,32 +881,24 @@ m.start(()=>{
 
 #### [2.3.4.13 getter minutes](#2-3-4-13)
 
-取：分值
 
-```ts
-
-```
-
-`Out[]:`
-
-```
-
-```
+参考 [2.3.4.12 setter minutes](#2-3-4-12) 中给出的案例。
 
 <div id="2-3-4-14"></div>
 
 #### [2.3.4.14 getter value](#2-3-4-14)
 
-输出当前的分计数值
+输出当前的 分:秒 值
 
 ```ts
-
+let m = new Minute(25,12);
+console.log(m.value);
 ```
 
 `Out[]:`
 
 ```
-
+25:12
 ```
 
 <div id="2-4"></div>
