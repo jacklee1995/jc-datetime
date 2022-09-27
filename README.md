@@ -9,6 +9,8 @@ A Javascript/Node datetime tool.
 [2. 使用教程](#2)
 
 - [2.1 进位器](#2-1)
+  - [2.1.1 进位器概念](#2-1-1)
+  - [2.1.2 进位器枚举值](#2-1-2)
 - [2.2 秒计数器 Second](#2-2)
   - [2.2.1 Second 的引入](#2-2-1)
   - [2.2.2 Second 对象的构造器](#2-2-2)
@@ -99,6 +101,10 @@ yarn add jc-datetime
 
 ## [2.1 进位器](#2-1)
 
+<div id="2-1-1"></div>
+
+### [2.1.1 进位器概念](#2-1-1)
+
 进位器是一个未直接暴露出来的对象，但是在 `Second`, Minute `, Hour` 中都将其引用为自身的参数。顾名思义，进位器是用以标志是否进位和进位的方式的对象，它用于标志当前计数是否已经溢出。溢出有两种形式，一种是正向计数时超出计数器的计数满值，我们将其称之为 **进位**。另一种时反向计数时直到本位为 `0` 后，再一次到达满值时的溢出，我们将其称之为 **退位**。
 
 进位器对象 Carry 声明如下：
@@ -123,7 +129,19 @@ declare class Carry {
 | **clear**     | 清空标志       | `void`   |
 | **get_state** | 获取进位器状态 | `number` |
 
-其中进位器的状态是一个枚举，它有三个枚举值：`CarryEnum.CARRY`、`CarryEnum.NONE`、`CarryEnum.BACK`分别表示 有进位、无进退位、有退位。
+其中进位器的状态是一个枚举，它有三个枚举值：`CarryEnum.CARRY`、`CarryEnum.NONE`、`CarryEnum.BACK` 分别表示 有进位、无进退位、有退位。
+
+<div id="2-1-2"></div>
+
+### [2.1.2 进位器枚举值](#2-1-2)
+
+在某些时候可能需要使用 Carry 的 `get_state`方法以确定当前进位器的状态，即确定是 CarryEnum 的哪一个值。 CarryEnum 是 Typescript 语法表示的枚举，他有三个枚举值，即 `CarryEnum.CARRY`、`CarryEnum.NONE`、`CarryEnum.BACK`，分别对应于数字 1、0、2：
+
+| 枚举值 | 初始化值 |
+|:-|:-|
+| CarryEnum.CARRY | 1 |
+| CarryEnum.NONE | 0 |
+| CarryEnum.BACK | 2 |
 
 <div id="2-2"></div>
 
