@@ -31,7 +31,7 @@ A Javascript/Node datetime tool.
   - [2.3.1 Minute 的引入](#2-3-1)
   - [2.3.2 Minute 对象的构造器](#2-3-2)
   - [2.3.3 Minute 对象的属性](#2-3-3)
-  - [2.3.4 Minute 对象的方法](#2-3-4)
+  - [2.3.4 Minute 对象的方法和存取器](#2-3-4)
 - [2.4 小时计数器 Hour](#2-4)
   - [2.4.1 Hour 的引入](#2-4-1)
   - [2.4.2 Hour 对象的构造器](#2-4-2)
@@ -587,12 +587,40 @@ m.print();
 
 ### [2.3.4 Minute 对象的方法](#2-3-4)
 
-#### next 方法
+<div id="2-3-4-1"></div>
 
-下一分钟，就地更改当前对象。
+#### [2.3.4.1 to_last 方法](#2-3-4-1)
+
+将时间拨到上一分钟。
 
 ```ts
-next():void
+last():void
+```
+
+例如：
+
+```ts
+let m = new Minute(0,0);
+m.print();
+m.to_last();
+m.print();
+```
+
+`Out[]:`
+
+```
+00:00
+59:00
+```
+
+<div id="2-3-4-2"></div>
+
+#### [2.3.4.2 to_next 方法](#2-3-4-2)
+
+将时间拨到上一分钟。
+
+```ts
+to_next():void
 ```
 
 例如：
@@ -600,9 +628,9 @@ next():void
 ```ts
 let m = new Minute(58,0);
 m.print();
-m.next();
+m.to_next();
 m.print();
-m.next();
+m.to_next();
 m.print();
 ```
 
@@ -614,65 +642,21 @@ m.print();
 00:00
 ```
 
-#### last 方法
+<div id="2-3-4-3"></div>
 
-上一分钟，就地更改当前对象。
-
-```ts
-last():void
-```
-
-例如：
-
-```ts
-let m = new Minute(0,0);
-m.print();
-m.last();
-m.print();
-```
-
-`Out[]:`
-
-```
-00:00
-59:00
-```
-
-#### next_second 方法
-
-下一秒种，就地更改当前对象。
-
-```ts
-next_second():void
-```
-
-例如：
-
-```ts
-let m = new Minute(0,0);
-m.next_second();
-m.print();
-```
-
-`Out[]:`
-
-```
-00:01
-```
-
-#### last_second 方法
+#### [2.3.4.3 to_last_second 方法](#2-3-4-3)
 
 上一秒种，就地更改当前对象。
 
 ```ts
-last_second():void
+to_last_second():void
 ```
 
 例如：
 
 ```ts
 let m = new Minute(0,0);
-m.last_second();
+m.to_last_second();
 m.print();
 ```
 
@@ -682,9 +666,43 @@ m.print();
 59:59
 ```
 
-#### get_value 方法
 
-获取当前计数值
+<div id="2-3-4-4"></div>
+
+
+#### [2.3.4.4 to_next_second 方法](#2-3-4-4)
+
+下一秒种，就地更改当前对象。
+
+```ts
+to_next_second():void
+```
+
+例如：
+
+```ts
+let m = new Minute(0,0);
+m.to_next_second();
+m.print();
+```
+
+`Out[]:`
+
+```
+00:01
+```
+
+<div id="2-3-4-5"></div>
+
+#### [2.3.4.5 print 方法](#2-3-4-5)
+
+
+
+<div id="2-3-4-6"></div>
+
+#### [2.3.4.6 get_value 方法](#2-3-4-6)
+
+获取当前计数值，已废弃。请改用 getter value()。
 
 ```ts
 get_value():string
@@ -704,49 +722,10 @@ console.log(m.get_value());
 59:59
 ```
 
-#### get_minute 方法
 
-获取分钟
+<div id="2-3-4-7"></div>
 
-```ts
-get_minute():number
-```
-
-例如：
-
-```ts
-let m = new Minute(17, 46);
-console.log(m.get_minute());
-```
-
-`Out[]:`
-
-```
-17
-```
-
-#### get_second 方法
-
-获取秒种值
-
-```ts
-get_second():number
-```
-
-例如：
-
-```ts
-let m = new Minute(17, 46);
-console.log(m.get_second());
-```
-
-`Out[]:`
-
-```
-46
-```
-
-#### start 方法
+#### [2.3.4.7 start 方法](#2-3-4-7)
 
 开始计时。
 
@@ -761,6 +740,130 @@ let m = new Minute(17,46);
 m.start(()=>{
     m.print()
 },m)
+```
+
+
+<div id="2-3-4-8"></div>
+
+#### [2.3.4.8 getter last](#2-3-4-8)
+
+获取上一分钟对应的 Minute 对象实例
+
+>注意：
+>该接口在 v1.0.6及以前，功能是将当前 Minute 对象实例 拨到下一分钟，并且不会返回任何值
+
+```ts
+
+```
+
+`Out[]:`
+
+```
+
+```
+
+
+<div id="2-3-4-9"></div>
+
+#### [2.3.4.9 getter next](#2-3-4-9)
+
+获取下一分钟对应的 Minute 对象实例
+
+>注意：
+>该接口在 v1.0.6及以前，功能是将当前 Minute 对象实例 拨到下一分钟，并且不会返回任何值
+
+```ts
+
+```
+
+`Out[]:`
+
+```
+
+```
+
+
+<div id="2-3-4-10"></div>
+
+#### [2.3.4.10 setter seconds](#2-3-4-10)
+
+存：秒值
+
+```ts
+
+```
+
+`Out[]:`
+
+```
+
+```
+
+
+<div id="2-3-4-11"></div>
+
+#### [2.3.4.11 getter seconds](#2-3-4-11)
+
+取：秒值
+
+```ts
+
+```
+
+`Out[]:`
+
+```
+
+```
+
+
+<div id="2-3-4-12"></div>
+
+#### [2.3.4.12 setter minutes](#2-3-4-12)
+
+存：分值
+
+```ts
+
+```
+
+`Out[]:`
+
+```
+
+```
+
+
+<div id="2-3-4-13"></div>
+
+#### [2.3.4.13 getter minutes](#2-3-4-13)
+
+取：分值
+
+```ts
+
+```
+
+`Out[]:`
+
+```
+
+```
+
+<div id="2-3-4-14"></div>
+
+#### [2.3.4.14 getter value](#2-3-4-14)
+
+输出当前的分计数值
+
+```ts
+
+```
+
+`Out[]:`
+
+```
+
 ```
 
 <div id="2-4"></div>
