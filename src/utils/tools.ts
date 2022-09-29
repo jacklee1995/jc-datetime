@@ -79,6 +79,26 @@ export function strfyObj(obj:any){
         if(ct > 0){
             str = str.slice(0, str.length-2);
         }
+        str += "}]";
+    }else{
+        new ValueError("Got a wrong param.")
+    }
+    return str;
+}
+
+export function strfyObj_indetail(obj:any){
+    let str = "";
+    let _ = Object.getOwnPropertyNames(obj.constructor.prototype)
+    if(isObject(obj)){
+        str +="[" + obj.constructor.name + " instance: OwnPrpty{" 
+        let ct = 0;
+        for (const key in obj) {
+            str += key+":"+obj[key]+", ";
+            ct += 1;
+        }
+        if(ct > 0){
+            str = str.slice(0, str.length-2);
+        }
         let ct2 = 0;
         str += "} CstrPrtMb{"
         _.forEach(e => {
@@ -96,4 +116,3 @@ export function strfyObj(obj:any){
     }
     return str;
 }
-

@@ -1,0 +1,16 @@
+{
+  "name": "jc-datetime-demo",
+  "version": "0.0.1",
+  "keywords": [
+    "jc-datetime",
+    "demo"
+  ],
+  "author": "jclee95",
+  "license": "MIT",
+  "devDependencies": {
+    "typescript": "^4.8.4"
+  },
+  "dependencies": {
+    "jc-datetime": "^1.0.9"
+  }
+}

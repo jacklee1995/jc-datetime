@@ -1,30 +1,30 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.strfyObj = exports.isObject = exports.isString = exports.isNumber = exports.zeroFill = exports.range = void 0;
-var abnormal_1 = require("./abnormal");
+exports.strfyObj_indetail = exports.strfyObj = exports.isObject = exports.isString = exports.isNumber = exports.zeroFill = exports.range = void 0;
+const abnormal_1 = require("./abnormal");
 function range(x) {
-    var ar = [];
+    let ar = [];
     if (typeof x === 'number') {
-        for (var i = 0; i < x; i++) {
+        for (let i = 0; i < x; i++) {
             ar.push(i);
         }
     }
     else if (x instanceof Array) {
         if (x.length == 1) {
             /**重载：传入数组只有1个元素 */
-            for (var i = 0; i < x[0]; i++) {
+            for (let i = 0; i < x[0]; i++) {
                 ar.push(i);
             }
         }
         else if (x.length == 2) {
             /**重载：传入2元素数组 */
-            for (var i = x[0]; i < x[1]; i++) {
+            for (let i = x[0]; i < x[1]; i++) {
                 ar.push(i);
             }
         }
         else if (x.length == 3) {
             /**重载：传入3元素数组 */
-            for (var i = x[0]; i < x[1]; i += x[2]) {
+            for (let i = x[0]; i < x[1]; i += x[2]) {
                 ar.push(i);
             }
         }
@@ -33,7 +33,7 @@ function range(x) {
 }
 exports.range = range;
 function zeroFill(s) {
-    var _ = "";
+    let _ = "";
     if (typeof s === "number") {
         _ = s.toString();
     }
@@ -55,34 +55,23 @@ function isObject(input) {
         Object.prototype.toString.call(input) === '[object Object]');
 }
 exports.isObject = isObject;
-var keyWords = [
+let keyWords = [
     "constructor", "__defineGetter__", "__defineSetter__",
     "hasOwnProperty", "__lookupGetter__", "__lookupSetter__",
     "isPrototypeOf", "propertyIsEnumerable", "toString",
     "valueOf", "__proto__", "toLocaleString"
 ];
 function strfyObj(obj) {
-    var str = "";
-    var _ = Object.getOwnPropertyNames(obj.constructor.prototype);
+    let str = "";
+    let _ = Object.getOwnPropertyNames(obj.constructor.prototype);
     if (isObject(obj)) {
         str += "[" + obj.constructor.name + " instance: OwnPrpty{";
-        var ct = 0;
-        for (var key in obj) {
+        let ct = 0;
+        for (const key in obj) {
             str += key + ":" + obj[key] + ", ";
             ct += 1;
         }
         if (ct > 0) {
-            str = str.slice(0, str.length - 2);
-        }
-        var ct2_1 = 0;
-        str += "} CstrPrtMb{";
-        _.forEach(function (e) {
-            if (!keyWords.includes(e)) {
-                str += e + ", ";
-                ct2_1++;
-            }
-        });
-        if (ct2_1 > 0) {
             str = str.slice(0, str.length - 2);
         }
         str += "}]";
@@ -93,3 +82,35 @@ function strfyObj(obj) {
     return str;
 }
 exports.strfyObj = strfyObj;
+function strfyObj_indetail(obj) {
+    let str = "";
+    let _ = Object.getOwnPropertyNames(obj.constructor.prototype);
+    if (isObject(obj)) {
+        str += "[" + obj.constructor.name + " instance: OwnPrpty{";
+        let ct = 0;
+        for (const key in obj) {
+            str += key + ":" + obj[key] + ", ";
+            ct += 1;
+        }
+        if (ct > 0) {
+            str = str.slice(0, str.length - 2);
+        }
+        let ct2 = 0;
+        str += "} CstrPrtMb{";
+        _.forEach(e => {
+            if (!keyWords.includes(e)) {
+                str += e + ", ";
+                ct2++;
+            }
+        });
+        if (ct2 > 0) {
+            str = str.slice(0, str.length - 2);
+        }
+        str += "}]";
+    }
+    else {
+        new abnormal_1.ValueError("Got a wrong param.");
+    }
+    return str;
+}
+exports.strfyObj_indetail = strfyObj_indetail;

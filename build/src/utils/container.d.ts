@@ -1,5 +1,5 @@
-declare class List extends Array {
-    constructor(...args: any);
+export declare class List extends Array {
+    constructor(...args: any[]);
     append(elem: any): void;
     add(elem: any): void;
     pop_left(): any;
@@ -33,7 +33,6 @@ declare class List extends Array {
      */
     zip(ar: any[] | List): Map<any, any>;
     toStringArray(): string[];
-    toString(): string;
-    print(): void;
+    toString(inDetail?: boolean, _isOuter?: boolean): string;
+    print(inDetail?: boolean): void;
 }
-export { List };

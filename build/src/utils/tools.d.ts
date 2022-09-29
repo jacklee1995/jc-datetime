@@ -7,3 +7,4 @@ export declare function isNumber(input: any): boolean;
 export declare function isString(input: any): boolean;
 export declare function isObject(input: any): boolean;
 export declare function strfyObj(obj: any): string;
+export declare function strfyObj_indetail(obj: any): string;

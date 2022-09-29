@@ -1,14 +1,14 @@
-import {isNumber, isString, isObject,strfyObj} from "./tools"
+import {isNumber, isString, isObject, strfyObj, strfyObj_indetail} from "./tools"
 
 declare type index = [a:number,b:number]
-class List extends Array {
-  constructor(...args: any){
+export class List extends Array {
+  
+  constructor(...args: any[]){
+    super(...args);
     if(args.length===1){
-      super();
       this[0] = args[0]
     }
-    else{
-      super();
+    else{;
       for(const i of args){this.push(i)}
     }
   }
@@ -132,9 +132,11 @@ class List extends Array {
     });
     return _;
   }
-  toString(): string {
-    let str = "List:[";
+  toString(inDetail:boolean=false,_isOuter:boolean=true): string {
     
+    let str = ``;
+    if(_isOuter){str = `List(${this.length})[ `}else{str = `[ `}
+    _isOuter = false
     this.forEach(e => {
       if(isString(e)){
         str +=  "\""+e.toString()+"\", ";
@@ -143,24 +145,62 @@ class List extends Array {
         str += e.toString()+", "; 
       }
       else if(isObject(e)){
-        str += "\n  " + strfyObj(e) +", "; 
+        if(inDetail){
+          str += `\n  ${strfyObj_indetail(e)}, \n  `
+        }else{
+          str += `\n  ${strfyObj(e)}, \n  `
+        }
+      }
+      else if(e instanceof List){
+        if(inDetail){
+          str += `\n  ${e.toString(true,false)},`
+        }else{
+          str += `\n  ${e.toString(false,false)},`
+        }
+        str=str.slice(0, str.length-3)+"],\n  "
+        
+      }
+      else if(e instanceof Array){
+        let _t = new List(...e);
+        str=str +`\n  ${_t.toString(false,false)}`
+        str = str.slice(0, str.length-3);
+        str=str + "], \n  ";
       }
       else{
-        str += e.toString()+"\", ";
+        str += e.toString(false,false)+"\", ";
       }
     });
     if(this.length >0){
-      str = str.slice(0, str.length-2);
+      str = str.slice(0, str.length-1);
     }
-    str +=  "]"
+    str +=  `\n]`
     return str;
   }
-
-  print():void{
-    console.log(this.toString());
+  print(inDetail:boolean=false):void{
+    console.log(this.toString(inDetail));
   }
 }
 
-export {
-    List
+class AA{
+  a=1
+  b=2
+  static d = 1
+  c(){return 0}
 }
+
+// let l = new List(1,2,3,4,5,6);
+// let r = new List()
+// r.add(new AA());
+// r.add("1");
+// r.add(2);
+// l.add(new AA());
+// l.add("1");
+// l.add(2);
+// l.add(r);
+// l.add("1");
+// l.add(["6E","DWQ","54D","DWE"]);
+// l.add(2);
+// l.add(new AA());
+// l.add("1");
+// l.add(2);
+// l.print();

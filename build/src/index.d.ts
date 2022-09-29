@@ -159,7 +159,11 @@ declare class Minute implements Counter {
      * @param {number} m 分值
      * @param {number} s 秒值
      */
-    constructor(m?: number, s?: number);
+    constructor(time: string);
+    /** 如指定为空数组，将默认初始时间为 0  */
+    constructor(time: []);
+    /** 如指定为数字数组，需要指定两个数字分别表示 分、秒 */
+    constructor(time: [number, number]);
     /**
      * 将时间拨到上一分钟
      * @since v1.0.7
@@ -288,70 +292,70 @@ declare class Hour implements Counter {
      */
     print(): void;
     /**
-     * 返回当前的小时值字符串
+     * 返回当前的小时值字符串。
      * @returns 被自动补 0 的 `小时:分钟:秒` 字符串
      * @deprecated since v1.0.5 use getter value() instead.
      */
     get_value(): string;
     /**
      * 获取小时的数字值
-     * @returns 表示当前计数小时的数值
+     * @returns 表示当前计数小时的数值。
      * @deprecated since v1.0.7 use getter hours() instead.
      */
     get_hour(): number;
     /**
      * 获取分钟的数字值
-     * @returns 表示当前计数分钟的数值
+     * @returns 表示当前计数分钟的数值。
      */
     get_minute(): number;
     /**
      * 获取秒的数字值
-     * @returns 表示当前计数秒的数值
+     * @returns 表示当前计数秒的数值。
      */
     get_second(): number;
     /**
-     * 存：秒值
-     * @param {number} seconds 要设置的秒值.
-     * @since v1.0.4
-     */
-    set seconds(seconds: number);
-    /**
-     * 获取上一小时对应的 Hour 对象实例
+     * 获取上一小时对应的 Hour 对象实例。
      * @since v1.0.7
      */
     get last(): Hour;
     /**
-     * 获取下一小时对应的 Hour 对象实例
+     * 获取下一小时对应的 Hour 对象实例。
      * @since v1.0.7
      */
     get next(): Hour;
     /**
+     * 存：秒值
+     * @param {number} seconds 要设置的秒值。
+     * @since v1.0.4
+     */
+    set seconds(seconds: number);
+    /**
      * 取：秒值
-     * @returns {number} 当前实例的秒值
+     * @returns {number} 当前实例的秒值。
      * @since v1.0.6
      */
     get seconds(): number;
     /**
      * 存：分值
-     * @param {number} seconds 要设置的分值.
+     * @param {number} seconds 要设置的分值。
      * @since v1.0.4
      */
     set minutes(minutes: number);
     /**
      * 取：分值
-     * @returns {number} 当前实例的分值
+     * @returns {number} 当前实例的分值。
      * @since v1.0.6
      */
     get minutes(): number;
     /**
      * 存：小时值
-     * @param {number} seconds 要设置的小时值.
+     * @param {number} seconds 要设置的小时值。
      * @since v1.0.4
      */
     set hours(hours: number);
     /**
      * 取：小时值
-     * @returns {number} 当前实例的小时值
+     * @returns {number} 当前实例的小时值。
      * @since v1.0.6
      */
     get hours(): number;
@@ -361,7 +365,7 @@ declare class Hour implements Counter {
      */
     get value(): string;
 }
-/**日期计数器  */
+/** 日期对象  */
 declare class Date_ {
     private _year;
     private _month;
@@ -416,15 +420,15 @@ declare class Date_ {
     /**
      * 从当前开始，向前 n-1 个 Date_ 对象构成一个列表返回
      * @param {number} n 天数
-     * @returns {Date_[]} n 天的 Date_ 对象 所构成的一个列表
+     * @returns {List} n 天的 Date_ 对象 所构成的一个列表
      */
-    ndaylist_last(n: number): Date_[];
+    ndaylist_last(n: number): List;
     /**
      * 从当前开始，向后 n-1 个 Date_ 对象构成一个列表返回
      * @param {number} n 天数
-     * @returns {Date_[]} n 天的 Date_ 对象 所构成的一个列表
+     * @returns {List} n 天的 Date_ 对象 所构成的一个列表
      */
-    ndaylist_next(n: number): Date_[];
+    ndaylist_next(n: number): List;
     /**
      * 获取日期字符串
      * @returns {string} 自动补 0 的日期字符串，例如 `2022/09/23`
@@ -480,7 +484,7 @@ declare class Date_ {
     get value(): string;
 }
 /**
- * 日期时间计数器
+ * 日期时间对象
  */
 declare class DateTime {
     date: Date_;

@@ -2,6 +2,8 @@
 
 A Javascript/Node datetime tool.
 
+> v1.0.10
+
 `<b><font color="blue" size="16">`目录 `</font></b>`
 
 [1. 安装](#1)
@@ -60,6 +62,14 @@ A Javascript/Node datetime tool.
     - [2.4.4.7 set_locale_time 方法](#2-4-4-7)
     - [2.4.4.8 start 方法](#2-4-4-8)
     - [2.4.4.9 print 方法](#2-4-4-9)
+    - [2.4.4.10 getter last](#2-4-4-10)
+    - [2.4.4.11 getter next](#2-4-4-11)
+    - [2.4.4.12 setter seconds](#2-4-4-12)
+    - [2.4.4.13 getter seconds](#2-4-4-13)
+    - [2.4.4.14 setter minutes](#2-4-4-14)
+    - [2.4.4.15 getter minutes](#2-4-4-15)
+    - [2.4.4.16 setter hours](#2-4-4-16)
+    - [2.4.4.17 getter hours](#2-4-4-17)
 - [2.5 日期器 Date_](#2-5)
   - [2.5.1 Date_ 的引入](#2-5-1)
   - [2.5.2 `Date_` 对象的构造器](#2-5-2)
@@ -99,6 +109,8 @@ A Javascript/Node datetime tool.
     - [2.6.3.10 to_next_year 方法](#2-6-3-10)
     - [2.6.3.11 start 方法](#2-6-3-11)
     - [2.6.3.12 print 方法](#2-6-3-12)
+    - [2.6.3.13 getter last](#2-6-3-13)
+    - [2.6.3.14 getter next](#2-6-3-14)
 - [2.7 独立的函数接口](#2-7)
   - [2.7.1 引入方式](#2-7-1)
   - [2.7.2 get_days 函数](#2-7-2)
@@ -182,15 +194,16 @@ declare class Carry {
 
 在某些时候可能需要使用 Carry 的 `get_state`方法以确定当前进位器的状态，即确定是 CarryEnum 的哪一个值。 CarryEnum 是 Typescript 语法表示的枚举，他有三个枚举值，即 `CarryEnum.CARRY`、`CarryEnum.NONE`、`CarryEnum.BACK`，分别对应于数字 1、0、2：
 
-| 枚举值 | 初始化值 |
-|:-|:-|
-| CarryEnum.CARRY | 1 |
-| CarryEnum.NONE | 0 |
-| CarryEnum.BACK | 2 |
+| 枚举值          | 初始化值 |
+| :-------------- | :------- |
+| CarryEnum.CARRY | 1        |
+| CarryEnum.NONE  | 0        |
+| CarryEnum.BACK  | 2        |
 
 <div id="2-1-3"></div>
 
 ### [2.1.3 计数器接口](#2-1-3)
+
 从 v1.0.7 开始，本模块提供的 Second、Minute、Hour 计数器，都是计数器接口 **Counter** 的实现：
 
 ```ts
@@ -306,18 +319,18 @@ Second(s: number=0)
 
 ### [2.2.4 `Second` 对象的方法和存取器](#2-2-4)
 
-| 方法名         | 描述        | 返回值类型 | 备注 |
-| :------------ | :--------- | :--------- | :--------- |
-|   **to_last** | 将时间拨到上一分钟     | `void`   |  |
-|   **to_next** | 将时间拨到下一分钟     | `void`   |  |
-|   **start**   | 开始计时  | `void`   |  |
-|   **print**   | 打印秒计数值 |  |  |
-| **get_value** | 取：以上一秒的时间返回一个新的 Second 对象 |  | 已废弃，请改用 getter **value** |
-| getter  **last**   | 取：以上一秒的时间返回一个新的 Second 对象 |  |  |
-| getter  **next**   | 取：以下一秒的时间返回一个新的 Second 对象 |  |  |
-| setter **seconds** | 存：秒 |  |  |
-| getter **seconds** | 取：秒 |  |  |
-| getter **value**   | 取：当前（秒）值字符串 |  |  |
+| 方法名                  | 描述                                       | 返回值类型 | 备注                                 |
+| :---------------------- | :----------------------------------------- | :--------- | :----------------------------------- |
+| **to_last**       | 将时间拨到上一分钟                         | `void`   |                                      |
+| **to_next**       | 将时间拨到下一分钟                         | `void`   |                                      |
+| **start**         | 开始计时                                   | `void`   |                                      |
+| **print**         | 打印秒计数值                               |            |                                      |
+| **get_value**     | 取：以上一秒的时间返回一个新的 Second 对象 |            | 已废弃，请改用 getter**value** |
+| getter**last**    | 取：以上一秒的时间返回一个新的 Second 对象 |            |                                      |
+| getter**next**    | 取：以下一秒的时间返回一个新的 Second 对象 |            |                                      |
+| setter**seconds** | 存：秒                                     |            |                                      |
+| getter**seconds** | 取：秒                                     |            |                                      |
+| getter**value**   | 取：当前（秒）值字符串                     |            |                                      |
 
 <div id="2-2-4-1"></div>
 
@@ -385,8 +398,11 @@ s.start(()=>{
 ```ts
 
 ```
+
 `Out[]:`
+
 ```
+
 ```
 
 <div id="2-2-4-6"></div>
@@ -396,12 +412,16 @@ s.start(()=>{
 取：以上一秒的时间返回一个新的 Second 对象
 
 ```ts
-
+let s = new Second(0);
+let last_second = s.last;
+last_second.print();
 ```
+
 `Out[]:`
-```
-```
 
+```
+59
+```
 
 <div id="2-2-4-7"></div>
 
@@ -410,10 +430,15 @@ s.start(()=>{
 取：以下一秒的时间返回一个新的 Second 对象
 
 ```ts
+let s = new Second(59);
+let next_second = s.next;
+next_second.print();
+```
+
+`Out[]:`
 
 ```
-`Out[]:`
-```
+00
 ```
 
 <div id="2-2-4-8"></div>
@@ -423,12 +448,16 @@ s.start(()=>{
 存：秒
 
 ```ts
-
+let s = new Second(0);
+s.seconds = 6;
+s.print();
 ```
+
 `Out[]:`
-```
-```
 
+```
+06
+```
 
 <div id="2-2-4-9"></div>
 
@@ -437,14 +466,15 @@ s.start(()=>{
 取：秒
 
 ```ts
-
+let s = new Second(0);
+console.log(s.seconds);
 ```
 
 `Out[]:`
 
 ```
+0
 ```
-
 
 <div id="2-2-4-10"></div>
 
@@ -452,16 +482,20 @@ s.start(()=>{
 
 取：当前（秒）值字符串
 
->注：
->这个字符串的长度（length）为 2 ，如果（秒）数值只有一位，则自动在前面补一个 0 构成两位字符串
+> 注：
+> 这个字符串的长度（length）为 2 ，如果（秒）数值只有一位，则自动在前面补一个 0 构成两位字符串
 
 ```ts
-
+let s = new Second(26);
+let v = s.value;
+console.log(v);
 ```
+
 `Out[]:`
-```
-```
 
+```
+26
+```
 
 <div id="2-3"></div>
 
@@ -566,18 +600,28 @@ import { Minute } from 'jc-datetime'
 ### [2.3.2 `Minute` 对象的构造器](#2-3-2)
 
 ```js
-constructor(m:number=0,s:number=0)
+constructor(time: string);
+constructor(time: []);
+constructor(time: [number, number]);
 ```
 
-| 参数 | 描述 | 类型   | 默认值 |
-| :--- | :--- | :----- | :----- |
-| m    | 分   | number | 0      |
-| s    | 秒   | number | 0      |
-
-如果没有指定任何参数，将默认初始为 0 ，例如：
+如果参数为一个形如 `21:30` 的字符串，将依据字符串的 `:` 作为分隔符，前者的数字作为初始后的分钟值，后者的数字作为初始后的秒值。例如：
 
 ```ts
-let m = new Minute();
+let m = new Minute("21:37");
+m.print();
+```
+
+`Out[]:`
+
+```
+21:37
+```
+
+如果参数为一个空数组，将默认初始为 0 ，例如：
+
+```ts
+let m = new Minute([]);
 m.print();
 ```
 
@@ -590,7 +634,7 @@ m.print();
 也可以初始化一个指定的值：
 
 ```ts
-let m = new Minute(29,59);
+let m = new Minute([29,59]);
 m.print();
 ```
 
@@ -599,6 +643,10 @@ m.print();
 ```
 29:59
 ```
+
+> Warning：
+>
+> 在 V 1.0.8 以前的版本中，只可以通过传入一个表示分、秒的数组进行初始化，如 `[8, 30]`。
 
 <div id="2-3-3"></div>
 
@@ -625,7 +673,7 @@ last():void
 例如：
 
 ```ts
-let m = new Minute(0,0);
+let m = new Minute([]);
 m.print();
 m.to_last();
 m.print();
@@ -642,7 +690,7 @@ m.print();
 
 #### [2.3.4.2 to_next 方法](#2-3-4-2)
 
-将时间拨到上一分钟。
+将时间拨到下一分钟。
 
 ```ts
 to_next():void
@@ -651,7 +699,7 @@ to_next():void
 例如：
 
 ```ts
-let m = new Minute(58,0);
+let m = new Minute([58,0]);
 m.print();
 m.to_next();
 m.print();
@@ -680,7 +728,7 @@ to_last_second():void
 例如：
 
 ```ts
-let m = new Minute(0,0);
+let m = new Minute([]);
 m.to_last_second();
 m.print();
 ```
@@ -691,9 +739,7 @@ m.print();
 59:59
 ```
 
-
 <div id="2-3-4-4"></div>
-
 
 #### [2.3.4.4 to_next_second 方法](#2-3-4-4)
 
@@ -706,7 +752,7 @@ to_next_second():void
 例如：
 
 ```ts
-let m = new Minute(0,0);
+let m = new Minute([]);
 m.to_next_second();
 m.print();
 ```
@@ -736,7 +782,7 @@ get_value():string
 例如：
 
 ```ts
-let m = new Minute(0,0);
+let m = new Minute([]);
 m.last_second();
 console.log(m.get_value());
 ```
@@ -746,7 +792,6 @@ console.log(m.get_value());
 ```
 59:59
 ```
-
 
 <div id="2-3-4-7"></div>
 
@@ -761,12 +806,11 @@ start(func: Function, ...params: any[]):void
 例如：
 
 ```ts
-let m = new Minute(17,46);
+let m = new Minute([17,46]);
 m.start(()=>{
     m.print()
 },m)
 ```
-
 
 <div id="2-3-4-8"></div>
 
@@ -774,19 +818,20 @@ m.start(()=>{
 
 获取上一分钟对应的 Minute 对象实例
 
->注意：
->该接口在 v1.0.6及以前，功能是将当前 Minute 对象实例 拨到下一分钟，并且不会返回任何值
+> 注意：
+> 该接口在 v1.0.6及以前，功能是将当前 Minute 对象实例 拨到下一分钟，并且不会返回任何值
 
 ```ts
-
+let m = new Minute([27,25]);
+let last_minute = m.last;
+last_minute.print()
 ```
 
 `Out[]:`
 
 ```
-
+26:25
 ```
-
 
 <div id="2-3-4-9"></div>
 
@@ -794,19 +839,22 @@ m.start(()=>{
 
 获取下一分钟对应的 Minute 对象实例
 
->注意：
->该接口在 v1.0.6及以前，功能是将当前 Minute 对象实例 拨到下一分钟，并且不会返回任何值
+> 注意：
+> 该接口在 v1.0.6及以前，功能是将当前 Minute 对象实例 拨到下一分钟，并且不会返回任何值
 
 ```ts
-
+let m = new Minute(59,56);
+let last_minute = m.next;
+last_minute.print()
+console.log(last_minute.c.state);
 ```
 
 `Out[]:`
 
 ```
-
+00:56
+1
 ```
-
 
 <div id="2-3-4-10"></div>
 
@@ -815,15 +863,16 @@ m.start(()=>{
 存：秒值
 
 ```ts
-
+let m = new Minute([52,56]);
+m.seconds = 25;             // setter
+console.log(m.seconds);     // getter
 ```
 
 `Out[]:`
 
 ```
-
+25
 ```
-
 
 <div id="2-3-4-11"></div>
 
@@ -831,16 +880,7 @@ m.start(()=>{
 
 取：秒值
 
-```ts
-
-```
-
-`Out[]:`
-
-```
-
-```
-
+参考 [2.3.4.10 setter seconds](#2-3-4-10) 中给出的案例。
 
 <div id="2-3-4-12"></div>
 
@@ -849,46 +889,38 @@ m.start(()=>{
 存：分值
 
 ```ts
-
+let m = new Minute([56,56]);
+m.minutes = 25;            // setter
+console.log(m.minutes);    // getter
 ```
 
 `Out[]:`
 
 ```
-
+25
 ```
-
 
 <div id="2-3-4-13"></div>
 
 #### [2.3.4.13 getter minutes](#2-3-4-13)
 
-取：分值
-
-```ts
-
-```
-
-`Out[]:`
-
-```
-
-```
+参考 [2.3.4.12 setter minutes](#2-3-4-12) 中给出的案例。
 
 <div id="2-3-4-14"></div>
 
 #### [2.3.4.14 getter value](#2-3-4-14)
 
-输出当前的分计数值
+输出当前的 分:秒 值
 
 ```ts
-
+let m = new Minute([25,12]);
+console.log(m.value);
 ```
 
 `Out[]:`
 
 ```
-
+25:12
 ```
 
 <div id="2-4"></div>
@@ -1036,7 +1068,6 @@ import { Hour } from 'jc-datetime'
 
 ### [2.4.2 Hour 对象的构造器](#2-4-2)
 
-
 ```js
 constructor(time: string);
 constructor(time: []);
@@ -1044,33 +1075,44 @@ constructor(time: [number, number, number]);
 ```
 
 #### 使用小时字符串构造
+
 例如：
+
 ```ts
 let h = new Hour("21:25:00");
 h.print();
 ```
+
 `Out[]:`
+
 ```
 21:25:00
 ```
 
 #### 使用空数组构造
+
 使用空数组将初始化为当前的系统时间，比如我现在是 21:14：
+
 ```ts
 let h = new Hour([]);
 h.print();
 ```
+
 `Out[]:`
+
 ```
 21:14:15
 ```
 
 #### 使用数字数组构造
+
 ```ts
 let h = new Hour([1, 30, 0]);
 h.print();
 ```
+
 `Out[]:`
+
 ```
 01:30:00
 ```
@@ -1083,10 +1125,10 @@ h.print();
 
 该标志是一个 Carry 的实例，用于标志是否进位、退位。
 
-
 <div id="2-4-4"></div>
 
 ### [2.4.4 Hour 对象的方法](#2-4-4)
+
 <div id="2-4-4-1"></div>
 
 #### [2.4.4.1 to_last_second 方法](#2-4-4-1)
@@ -1098,11 +1140,12 @@ let h = new Hour("00:00:00");
 h.to_last_second();
 h.print();
 ```
+
 `Out[]:`
+
 ```
 59:59:59
 ```
-
 
 <div id="2-4-4-2"></div>
 
@@ -1115,12 +1158,12 @@ let h = new Hour("59:59:59");
 h.to_next_second();
 h.print();
 ```
+
 `Out[]:`
+
 ```
 00:00:00
 ```
-
-
 
 <div id="2-4-4-3"></div>
 
@@ -1133,11 +1176,12 @@ let h = new Hour("00:00:00");
 h.to_last_minute();
 h.print();
 ```
+
 `Out[]:`
+
 ```
 59:59:00
 ```
-
 
 <div id="2-4-4-4"></div>
 
@@ -1150,11 +1194,12 @@ let h = new Hour("00:59:00");
 h.to_next_minute();
 h.print();
 ```
+
 `Out[]:`
+
 ```
 01:00:00
 ```
-
 
 <div id="2-4-4-5"></div>
 
@@ -1167,11 +1212,12 @@ let h = new Hour("00:00:00");
 h.to_last();
 h.print();
 ```
+
 `Out[]:`
+
 ```
 59:00:00
 ```
-
 
 <div id="2-4-4-6"></div>
 
@@ -1184,12 +1230,12 @@ let h = new Hour("59:00:00");
 h.to_next();
 h.print();
 ```
+
 `Out[]:`
+
 ```
 00:00:00
 ```
-
-
 
 <div id="2-4-4-7"></div>
 
@@ -1202,12 +1248,12 @@ let h = new Hour("00:00:00");
 h.set_locale_time(); // 我的当前时间是 21:52:47
 h.print();
 ```
+
 `Out[]:`
+
 ```
 21:52:47
 ```
-
-
 
 <div id="2-4-4-8"></div>
 
@@ -1222,10 +1268,81 @@ h.start(()=>{
 },h)
 ```
 
+<div id="2-4-4-9"></div>
 
 #### [2.4.4.9 print](#2-4-4-9)
 
 该方法用于打印秒计数值，如果（秒）数值只有一位，则自动在前面补一个 0 构成两位字符串。请参考其它使用了该函数的案例。
+
+<div id="2-4-4-10"></div>
+
+#### [2.4.4.10 getter last](#2-4-4-10)
+
+获取上一小时对应的 Hour 对象实例。例如：
+
+```ts
+let h = new Hour("21:25:00");
+h.last.print();
+```
+
+`Out[]:`
+
+```
+20:25:00
+```
+
+<div id="2-4-4-11"></div>
+
+#### [2.4.4.11 getter next](#2-4-4-11)
+
+获取下一小时对应的 Hour 对象实例。例如：
+
+```ts
+let h = new Hour("21:25:00");
+h.next.print();
+```
+
+`Out[]:`
+
+```
+22:25:00
+```
+
+<div id="2-4-4-12"></div>
+
+#### [2.4.4.12 setter seconds](#2-4-4-12)
+
+存：当前实例的秒值。
+
+<div id="2-4-4-13"></div>
+
+#### [2.4.4.13 getter seconds](#2-4-4-13)
+
+取：当前实例的秒值。
+
+<div id="2-4-4-14"></div>
+
+#### [2.4.4.14 setter minutes](#2-4-4-14)
+
+存：当前实例的分钟值。
+
+<div id="2-4-4-15"></div>
+
+#### [2.4.4.15 getter minutes](#2-4-4-15)
+
+取：当前实例的分钟值。
+
+<div id="2-4-4-16"></div>
+
+#### [2.4.4.16 setter hours](#2-4-4-16)
+
+存：当前实例的小时值。
+
+<div id="2-4-4-17"></div>
+
+#### [2.4.4.17 getter hours](#2-4-4-17)
+
+取：当前实例的小时值。
 
 <div id="2-5"></div>
 
@@ -1286,9 +1403,9 @@ declare class Date_ {
     /**
      * 从当前开始，向前 n-1 个 Date_ 对象构成一个列表返回
      * @param {number} n 天数
-     * @returns {Date_[]} n 天的 Date_ 对象 所构成的一个列表
+     * @returns {List} n 天的 Date_ 对象 所构成的一个列表
      */
-    ndaylist_last(n: number): Date_[];
+    ndaylist_last(n: number): List;
     /**
      * 从当前开始，向后 n-1 个 Date_ 对象构成一个列表返回
      * @param {number} n 天数
@@ -1380,7 +1497,7 @@ d.print();
 `Out[]:`
 
 ```
-2022/5/26
+2022/05/26
 ```
 
 也可以为这个字符串套上一个 `[]`，使之成为一个字符串数组参数，这有完全相同的效果：
@@ -1393,7 +1510,7 @@ d.print();
 `Out[]:`
 
 ```
-2022/5/26
+2022/05/26
 ```
 
 或者以三个数字构成的数组分别给出年、月、日的数值，例如：
@@ -1406,7 +1523,7 @@ d.print();
 `Out[]:`
 
 ```
-2022/5/26
+2022/05/26
 ```
 
 如果你传入的是一个空数组，则自动初化为当前的日期，例如我电脑当前的系统时间的日期为 2022年8月25日：
@@ -1419,7 +1536,7 @@ d.print();
 `Out[]:`
 
 ```
-2022/8/25
+2022/08/25
 ```
 
 <div id="2-5-3"></div>
@@ -1430,10 +1547,10 @@ d.print();
 
 该标志是一个 Carry 的实例，用于标志是否进位、退位。
 
-
 <div id="2-5-4"></div>
 
 ### [2.5.4 `Date_` 对象的方法](#2-5-4)
+
 <div id="2-5-4-1"></div>
 
 #### [2.5.4.1 is_leap_year 方法](#2-5-4-1)
@@ -1454,6 +1571,7 @@ console.log(d.is_leap_year());
 2022/8/25
 false
 ```
+
 <div id="2-5-4-2"></div>
 
 #### [2.5.4.2 to_next 方法](#2-5-4-2)
@@ -1461,12 +1579,18 @@ false
 将时间拨到明天
 
 ```ts
-
+d.print();
+d.to_next();
+d.print();
 ```
+
 `Out[]:`
-```
 
 ```
+2022/08/29
+2022/08/30
+```
+
 <div id="2-5-4-3"></div>
 
 #### [2.5.4.3 to_last 方法](#2-5-4-3)
@@ -1474,12 +1598,19 @@ false
 将时间拨到昨天
 
 ```ts
-
+let d = new Date_([]);
+d.print();
+d.to_last();
+d.print();
 ```
+
 `Out[]:`
-```
 
 ```
+2022/08/29
+2022/08/28
+```
+
 <div id="2-5-4-4"></div>
 
 #### [2.5.4.4 ndays_ago 方法](#2-5-4-4)
@@ -1499,6 +1630,7 @@ nAgo.print();
 ```
 2020/11/30
 ```
+
 <div id="2-5-4-5"></div>
 
 #### [2.5.4.5 ndays_later 方法](#2-5-4-5)
@@ -1516,8 +1648,9 @@ nAgo.print();
 `Out[]:`
 
 ```
-2021/3/1
+2021/03/01
 ```
+
 <div id="2-5-4-6"></div>
 
 #### [2.5.4.6 ndaylist_next 方法](#2-5-4-6)
@@ -1527,49 +1660,54 @@ nAgo.print();
 例如：
 
 ```js
-let d = new Date_("2021/01/01");
-let nLextNext = d.ndaylist_next(32);
+let d = new Date_("2021/01/25");
+let nLextNext = d.ndaylist_next(12);
 console.log(nLextNext);
 ```
 
 `Out[]:`
 
 ```
-List(32) [
-  Date_ { year: 2021, month: 1, day: 1 },
-  Date_ { year: 2021, month: 1, day: 2 },
-  Date_ { year: 2021, month: 1, day: 3 },
-  Date_ { year: 2021, month: 1, day: 4 },
-  Date_ { year: 2021, month: 1, day: 5 },
-  Date_ { year: 2021, month: 1, day: 6 },
-  Date_ { year: 2021, month: 1, day: 7 },
-  Date_ { year: 2021, month: 1, day: 8 },
-  Date_ { year: 2021, month: 1, day: 9 },
-  Date_ { year: 2021, month: 1, day: 10 },
-  Date_ { year: 2021, month: 1, day: 11 },
-  Date_ { year: 2021, month: 1, day: 12 },
-  Date_ { year: 2021, month: 1, day: 13 },
-  Date_ { year: 2021, month: 1, day: 14 },
-  Date_ { year: 2021, month: 1, day: 15 },
-  Date_ { year: 2021, month: 1, day: 16 },
-  Date_ { year: 2021, month: 1, day: 17 },
-  Date_ { year: 2021, month: 1, day: 18 },
-  Date_ { year: 2021, month: 1, day: 19 },
-  Date_ { year: 2021, month: 1, day: 20 },
-  Date_ { year: 2021, month: 1, day: 21 },
-  Date_ { year: 2021, month: 1, day: 22 },
-  Date_ { year: 2021, month: 1, day: 23 },
-  Date_ { year: 2021, month: 1, day: 24 },
-  Date_ { year: 2021, month: 1, day: 25 },
-  Date_ { year: 2021, month: 1, day: 26 },
-  Date_ { year: 2021, month: 1, day: 27 },
-  Date_ { year: 2021, month: 1, day: 28 },
-  Date_ { year: 2021, month: 1, day: 29 },
-  Date_ { year: 2021, month: 1, day: 30 },
-  Date_ { year: 2021, month: 1, day: 31 },
-  Date_ { year: 2021, month: 2, day: 1 }
+List(12) [
+  Date_ { _year: 2021, _month: 1, _day: 25 },
+  Date_ { _year: 2021, _month: 1, _day: 26 },
+  Date_ { _year: 2021, _month: 1, _day: 27 },
+  Date_ { _year: 2021, _month: 1, _day: 28 },
+  Date_ { _year: 2021, _month: 1, _day: 29 },
+  Date_ { _year: 2021, _month: 1, _day: 30 },
+  Date_ { _year: 2021, _month: 1, _day: 31 },
+  Date_ { _year: 2021, _month: 2, _day: 1 },
+  Date_ { _year: 2021, _month: 2, _day: 2 },
+  Date_ { _year: 2021, _month: 2, _day: 3 },
+  Date_ { _year: 2021, _month: 2, _day: 4 },
+  Date_ { _year: 2021, _month: 2, _day: 5 }
 ]
 ```
+
+或者使用 List 对象 自带的 print 方法（v1.0.8）：
+
+```ts
+nLextNext.print()
+```
+
+`Out[]:`
+
+```
+List:[
+  [Date_ instance: OwnPrpty{_year:2021, _month:1, _day:25} CstrPrtMb{_d_check, is_leap_year, to_next, to_last, ndays_ago, ndays_later, ndaylist_last, ndaylist_next, get_value, print, next, last, year, month, day, value}], 
+  [Date_ instance: OwnPrpty{_year:2021, _month:1, _day:26} CstrPrtMb{_d_check, is_leap_year, to_next, to_last, ndays_ago, ndays_later, ndaylist_last, ndaylist_next, get_value, print, next, last, year, month, day, value}], 
+  [Date_ instance: OwnPrpty{_year:2021, _month:1, _day:27} CstrPrtMb{_d_check, is_leap_year, to_next, to_last, ndays_ago, ndays_later, ndaylist_last, ndaylist_next, get_value, print, next, last, year, month, day, value}], 
+  [Date_ instance: OwnPrpty{_year:2021, _month:1, _day:28} CstrPrtMb{_d_check, is_leap_year, to_next, to_last, ndays_ago, ndays_later, ndaylist_last, ndaylist_next, get_value, print, next, last, year, month, day, value}], 
+  [Date_ instance: OwnPrpty{_year:2021, _month:1, _day:29} CstrPrtMb{_d_check, is_leap_year, to_next, to_last, ndays_ago, ndays_later, ndaylist_last, ndaylist_next, get_value, print, next, last, year, month, day, value}], 
+  [Date_ instance: OwnPrpty{_year:2021, _month:1, _day:30} CstrPrtMb{_d_check, is_leap_year, to_next, to_last, ndays_ago, ndays_later, ndaylist_last, ndaylist_next, get_value, print, next, last, year, month, day, value}], 
+  [Date_ instance: OwnPrpty{_year:2021, _month:1, _day:31} CstrPrtMb{_d_check, is_leap_year, to_next, to_last, ndays_ago, ndays_later, ndaylist_last, ndaylist_next, get_value, print, next, last, year, month, day, value}], 
+  [Date_ instance: OwnPrpty{_year:2021, _month:2, _day:1} CstrPrtMb{_d_check, is_leap_year, to_next, to_last, ndays_ago, ndays_later, ndaylist_last, ndaylist_next, get_value, print, next, last, year, month, day, value}], 
+  [Date_ instance: OwnPrpty{_year:2021, _month:2, _day:2} CstrPrtMb{_d_check, is_leap_year, to_next, to_last, ndays_ago, ndays_later, ndaylist_last, ndaylist_next, get_value, print, next, last, year, month, day, value}], 
+  [Date_ instance: OwnPrpty{_year:2021, _month:2, _day:3} CstrPrtMb{_d_check, is_leap_year, to_next, to_last, ndays_ago, ndays_later, ndaylist_last, ndaylist_next, get_value, print, next, last, year, month, day, value}], 
+  [Date_ instance: OwnPrpty{_year:2021, _month:2, _day:4} CstrPrtMb{_d_check, is_leap_year, to_next, to_last, ndays_ago, ndays_later, ndaylist_last, ndaylist_next, get_value, print, next, last, year, month, day, value}], 
+  [Date_ instance: OwnPrpty{_year:2021, _month:2, _day:5} CstrPrtMb{_d_check, is_leap_year, to_next, to_last, ndays_ago, ndays_later, ndaylist_last, ndaylist_next, get_value, print, next, last, year, month, day, value}]]
+```
+
 <div id="2-5-4-7"></div>
 
 #### [2.5.4.7 ndaylist_last](#2-5-4-7)
@@ -1581,6 +1719,11 @@ List(32) [
 ```js
 let d = new Date_("2020/03/6");
 let nLextLast = d.ndaylist_last(9);
+```
+
+该方法返回的是一个 List 对象，可以将其输出：
+
+```js
 console.log(nLextLast);
 ```
 
@@ -1588,17 +1731,39 @@ console.log(nLextLast);
 
 ```
 List(9) [
-  Date_ { year: 2020, month: 3, day: 6 },
-  Date_ { year: 2020, month: 3, day: 5 },
-  Date_ { year: 2020, month: 3, day: 4 },
-  Date_ { year: 2020, month: 3, day: 3 },
-  Date_ { year: 2020, month: 3, day: 2 },
-  Date_ { year: 2020, month: 3, day: 1 },
-  Date_ { year: 2020, month: 2, day: 29 },
-  Date_ { year: 2020, month: 2, day: 28 },
-  Date_ { year: 2020, month: 2, day: 27 }
+  Date_ { _year: 2020, _month: 3, _day: 6 },
+  Date_ { _year: 2020, _month: 3, _day: 5 },
+  Date_ { _year: 2020, _month: 3, _day: 4 },
+  Date_ { _year: 2020, _month: 3, _day: 3 },
+  Date_ { _year: 2020, _month: 3, _day: 2 },
+  Date_ { _year: 2020, _month: 3, _day: 1 },
+  Date_ { _year: 2020, _month: 2, _day: 29 },
+  Date_ { _year: 2020, _month: 2, _day: 28 },
+  Date_ { _year: 2020, _month: 2, _day: 27 }
 ]
 ```
+
+也可以使用 List 对象的 print 方法（v1.0.8）：
+
+```js
+nLextLast.print();
+```
+
+`Out[]:`
+
+```
+List:[
+  [Date_ instance: OwnPrpty{_year:2020, _month:3, _day:6} CstrPrtMb{_d_check, is_leap_year, to_next, to_last, ndays_ago, ndays_later, ndaylist_last, ndaylist_next, get_value, print, next, last, year, month, day, value}],
+  [Date_ instance: OwnPrpty{_year:2020, _month:3, _day:5} CstrPrtMb{_d_check, is_leap_year, to_next, to_last, ndays_ago, ndays_later, ndaylist_last, ndaylist_next, get_value, print, next, last, year, month, day, value}],
+  [Date_ instance: OwnPrpty{_year:2020, _month:3, _day:4} CstrPrtMb{_d_check, is_leap_year, to_next, to_last, ndays_ago, ndays_later, ndaylist_last, ndaylist_next, get_value, print, next, last, year, month, day, value}],
+  [Date_ instance: OwnPrpty{_year:2020, _month:3, _day:3} CstrPrtMb{_d_check, is_leap_year, to_next, to_last, ndays_ago, ndays_later, ndaylist_last, ndaylist_next, get_value, print, next, last, year, month, day, value}],
+  [Date_ instance: OwnPrpty{_year:2020, _month:3, _day:2} CstrPrtMb{_d_check, is_leap_year, to_next, to_last, ndays_ago, ndays_later, ndaylist_last, ndaylist_next, get_value, print, next, last, year, month, day, value}],
+  [Date_ instance: OwnPrpty{_year:2020, _month:3, _day:1} CstrPrtMb{_d_check, is_leap_year, to_next, to_last, ndays_ago, ndays_later, ndaylist_last, ndaylist_next, get_value, print, next, last, year, month, day, value}],
+  [Date_ instance: OwnPrpty{_year:2020, _month:2, _day:29} CstrPrtMb{_d_check, is_leap_year, to_next, to_last, ndays_ago, ndays_later, ndaylist_last, ndaylist_next, get_value, print, next, last, year, month, day, value}],
+  [Date_ instance: OwnPrpty{_year:2020, _month:2, _day:28} CstrPrtMb{_d_check, is_leap_year, to_next, to_last, ndays_ago, ndays_later, ndaylist_last, ndaylist_next, get_value, print, next, last, year, month, day, value}],
+  [Date_ instance: OwnPrpty{_year:2020, _month:2, _day:27} CstrPrtMb{_d_check, is_leap_year, to_next, to_last, ndays_ago, ndays_later, ndaylist_last, ndaylist_next, get_value, print, next, last, year, month, day, value}]]
+```
+
 <div id="2-5-4-8"></div>
 
 #### [2.5.4.8 get_value 方法](#2-5-4-8)
@@ -1607,11 +1772,18 @@ List(9) [
 
 > deprecated since v1.03, please use getter `value()` instead
 
-
 例如：
 
-```js
+```ts
+let d = new Date_("2021/09/25");
+let value = d.get_value();
+console.log(value);
+```
 
+`Out[]:`
+
+```
+2021/09/25
 ```
 
 <div id="2-5-4-9"></div>
@@ -1659,12 +1831,14 @@ lastDay.print();
 #### [2.5.4.12 getter year](#2-5-4-12)
 
 ```ts
-
+let d = new Date_("2022/07/01");
+console.log(d.year);
 ```
+
 `Out[]:`
 
 ```
-
+2022
 ```
 
 <div id="2-5-4-13"></div>
@@ -1672,84 +1846,93 @@ lastDay.print();
 #### [2.5.4.13 setter year](#2-5-4-13)
 
 ```ts
-
+let d = new Date_("2022/07/01");
+d.year = 2008;
+console.log(d.year);
 ```
+
 `Out[]:`
 
 ```
-
+2008
 ```
-
 
 <div id="2-5-4-14"></div>
 
 #### [2.5.4.14 getter month](#2-5-4-14)
 
 ```ts
-
+let d = new Date_("2022/07/01");
+console.log(d.month);
 ```
+
 `Out[]:`
 
 ```
-
+7
 ```
-
 
 <div id="2-5-4-15"></div>
 
 #### [2.5.4.15 setter month](#2-5-4-15)
 
 ```ts
-
+let d = new Date_("2019/07/01");
+d.month = 12;
+console.log(d.month);
 ```
+
 `Out[]:`
 
 ```
-
+12
 ```
-
 
 <div id="2-5-4-16"></div>
 
 #### [2.5.4.16 getter day](#2-5-4-16)
 
 ```ts
-
+let d = new Date_("2016/06/06");
+console.log(d.day);
 ```
+
 `Out[]:`
 
 ```
-
+6
 ```
-
 
 <div id="2-5-4-17"></div>
 
 #### [2.5.4.17 setter day](#2-5-4-17)
 
 ```ts
-
+let d = new Date_("2016/06/06");
+d.day = 16;
+console.log(d.day);
 ```
+
 `Out[]:`
 
 ```
-
+16
 ```
-
 
 <div id="2-5-4-18"></div>
 
 #### [2.5.4.18 getter value](#2-5-4-18)
 
 ```ts
-
+let d = new Date_("2016/06/06");
+console.log(d.value);
 ```
+
 `Out[]:`
 
 ```
-
+2016/06/06
 ```
-
 
 <div id="2-6"></div>
 
@@ -1885,7 +2068,9 @@ let dt = new DateTime("2022/01/01 00:00:00");
 dt.to_last_second();
 dt.print()
 ```
+
 `Out[]:`
+
 ```
 2021/12/31 59:59:59
 ```
@@ -1903,25 +2088,29 @@ let dt = new DateTime("2021/12/31 59:59:59");
 dt.to_next_second();
 dt.print();
 ```
+
 `Out[]:`
+
 ```
 2022/01/01 00:00:00
 ```
 
 <div id="2-6-3-3"></div>
 
-
 #### [2.6.3.3 to_last_minute 方法](#2-6-3-3)
 
 拨到上一分钟
 
 例如：
+
 ```ts
 let dt = new DateTime("2022/01/01 00:00:00");
 dt.to_last_minute();
 dt.print();
 ```
+
 `Out[]:`
+
 ```
 2021/12/31 59:59:00
 ```
@@ -1933,12 +2122,15 @@ dt.print();
 拨到下一分钟
 
 例如：
+
 ```ts
 let dt = new DateTime("2021/12/31 59:59:00");
 dt.to_next_minute();
 dt.print();
 ```
+
 `Out[]:`
+
 ```
 2022/01/01 00:00:00
 ```
@@ -1950,12 +2142,15 @@ dt.print();
 拨到上一小时
 
 例如：
+
 ```ts
 let dt = new DateTime("2022/01/01 00:00:00");
 dt.to_last_hour();
 dt.print();
 ```
+
 `Out[]:`
+
 ```
 2021/12/31 59:00:00
 ```
@@ -1967,12 +2162,15 @@ dt.print();
 拨到下一小时
 
 例如：
+
 ```ts
 let dt = new DateTime("2021/12/31 59:00:00");
 dt.to_next_hour();
 dt.print();
 ```
+
 `Out[]:`
+
 ```
 2022/01/01 00:00:00
 ```
@@ -1984,12 +2182,15 @@ dt.print();
 拨到上一天
 
 例如：
+
 ```ts
 let dt = new DateTime("2020/01/01 00:00:00");
 dt.to_last_day();
 dt.print();
 ```
+
 `Out[]:`
+
 ```
 2019/12/31 00:00:00
 ```
@@ -2001,12 +2202,15 @@ dt.print();
 拨到下一天
 
 例如：
+
 ```ts
 let dt = new DateTime("2020/02/29 01:02:03");
 dt.to_next_day();
 dt.print();
 ```
+
 `Out[]:`
+
 ```
 2020/03/01 01:02:03
 ```
@@ -2018,23 +2222,29 @@ dt.print();
 拨到下个月的这个时候
 
 例如：
+
 ```ts
 let dt = new DateTime("2020/01/29 12:06:00");
 dt.to_next_month();
 dt.print();
 ```
+
 `Out[]:`
+
 ```
 2020/02/29 12:06:00
 ```
 
 再例如
+
 ```ts
 let dt = new DateTime("2020/01/29 12:00:00");
 dt.to_next_month();
 dt.print();
 ```
+
 `Out[]:`
+
 ```
 2020/03/02 12:00:00
 ```
@@ -2046,12 +2256,15 @@ dt.print();
 拨到下一年的这个时候
 
 例如：
+
 ```ts
 let dt = new DateTime("2020/01/31 12:06:00");
 dt.to_next_year();
 dt.print();
 ```
+
 `Out[]:`
+
 ```
 2021/01/31 12:06:00
 ```
@@ -2063,6 +2276,7 @@ dt.print();
 开启计时
 
 例如：
+
 ```ts
 let dt = new DateTime("2020/01/01 00:00:00");
 dt.start(()=>{
@@ -2082,15 +2296,11 @@ dt.start(()=>{
 
 返回对应于昨天的 DateTime 对象
 
-
-
 <div id="2-6-3-14"></div>
 
 #### [2.6.3.14 getter next](#2-6-3-14)
 
 返回对应于明天的 DateTime 对象
-
-
 
 <div id="2-7"></div>
 
@@ -2390,4 +2600,6 @@ console.log(lastday);
 
 ## [2.8 关于 List 对象的说明](#2-8)
 
-在本模块中 List 是一个内部定义的数据容器，它继承于原生 JavaScript 的 Array 对象。一些返回一组值的方法，如 `dartelist()` ，所返回的都不是原生的 JavaScript Array而是 List。
+在本模块中 List 是一个内部定义的数据容器，它继承于原生 JavaScript 的 Array 对象。一些返回一组值的方法，所返回的都不是原生的 JavaScript Array而是 List。
+
+其 print() 方法可以展示 List 对象的更多细节。
