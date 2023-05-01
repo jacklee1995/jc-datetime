@@ -1,0 +1,51 @@
+{
+  "name": "jc-datetime",
+  "version": "1.0.11",
+  "description": "A date and time tool.",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jacklee1995/jc-datetime.git"
+  },
+  "scripts": {
+    "dev": "gulp --require @esbuild-kit/cjs-loader",
+    "api": "doc-holiday src/**/*"
+  },
+  "homepage": "http://thispage.tech:9680/jclee1995/jc-color",
+  "keywords": [
+    "date",
+    "time",
+    "datetime",
+    "day",
+    "jcstudio"
+  ],
+  "author": {
+    "name": "jcLee1995",
+    "email": "291148484@163.com",
+    "url": "http://thispage.tech"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "@esbuild-kit/cjs-loader": "^2.4.2",
+    "@tremho/doc-holiday": "^1.1.0",
+    "@types/gulp": "^4.0.10",
+    "@types/gulp-concat": "^0.0.33",
+    "@types/gulp-rename": "^2.0.1",
+    "@types/gulp-uglify": "^3.0.7",
+    "@types/node": "^18.14.1",
+    "del": "^7.0.0",
+    "documentation": "^14.0.1",
+    "gulp": "^4.0.2",
+    "gulp-concat": "^2.6.1",
+    "gulp-rename": "^2.0.0",
+    "gulp-typescript": "6.0.0-alpha.1",
+    "gulp-uglify": "^3.0.2",
+    "jsdoc": "^4.0.2",
+    "typescript": "^4.9.4"
+  },
+  "engines": {
+    "node": ">= 16"
+  },
+  "dependencies": {
+    "@jcstdio/jc-utils": "^0.0.12"
+  }
+}

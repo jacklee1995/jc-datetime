@@ -1,17 +1,21 @@
 # jc-datetime
 
-<fieldset><legend>About jc-datetime...</legend>
-<p><b>Author</b> : <a href="https://blog.csdn.net/qq_28550263?spm=1010.2135.3001.5343"><cite>李俊才 </cite></a></p>
-<p><b>Email</b> : <a href="mailto:291148484@163.com"><cite>291148484@163.com</cite></a></p>
-<p><b>Version</b> : <a>v0.0.11</a></p>
-<p><b>home</b> : <a href="http://thispage.tech:9680/jclee1995/jc-datetime">http://thispage.tech:9680/jclee1995/jc-datetime</a></p>
-<p><b>gitee</b> : <a href="https://gitee.com/jacklee1995/jc-datetime">https://gitee.com/jacklee1995/jc-datetime</a></p>
-<p><b>github</b> : <a href="https://github.com/jacklee1995/jc-datetime">https://github.com/jacklee1995/jc-datetime</a></p>
+<fieldset>
+  <legend>关于 jc-datetime...</legend>
+  <p><b>作者</b> : <a href="https://blog.csdn.net/qq_28550263?spm=1010.2135.3001.5343"><cite>李俊才 </cite></a></p>
+  <p><b>邮箱</b> : <a href="mailto:291148484@163.com"><cite>291148484@163.com</cite></a></p>
+  <p><b>版本</b> : <a>v1.0.11</a></p>
+  <p><b>home</b> : <a href="http://thispage.tech:9680/jclee1995/jc-datetime">http://thispage.tech:9680/jclee1995/jc-datetime</a></p>
+  <p><b>gitee</b> : <a href="https://gitee.com/jacklee1995/jc-datetime">https://gitee.com/jacklee1995/jc-datetime</a></p>
+  <p><b>github</b> : <a href="https://github.com/jacklee1995/jc-datetime">https://github.com/jacklee1995/jc-datetime</a></p>
 
-<b>bref</b> :  <p> Jc-datetime is a date and time tool module, which provides a counter tool for date and time, and can be conveniently used for date and time calculation. Its main problems are such as finding the number of days in a certain year/month/day, the date of the day before, the day after or several days before and after, and the calculation of date and time such as waiting. It can be used in script programming with a lot of date and time calculation, especially in office automation.</p>
+
+<b>简介</b> :  <p> jc-datetime 是一个 日期时间工具模块，提供了日期与时间的计数器工具，可以方便的用于日期和时间的计算。它主要问题如求取某 `年/月/日` 的天数，前一天、后一天或前后若干天的日期，等待之类的日期和时间的计算问题。在日期、时间计算颇多的脚本编程中，尤其是办公自动化中，可以考虑使用之。
 </fieldset><br>
 
-[中文](readme_CN.md) | English
+中文 | [English](/readme.md "Click to jump to English document.")
+
+
 
 `<b><font color="blue" size="16">``目录 </font>``</b>`
 
@@ -24,8 +28,7 @@
   - [2.1.2 进位器枚举值](#2-1-2)
   - [2.1.3 计数器接口](#2-1-3)
 - [2.2 秒计数器 Second](#2-2)
-  - [2.2.1 Second 的引入](#2-2-1)
-  - [2.2.2 Second 对象的构造器](#2-2-2)
+  - [2.2.1 Second 的引入](#2-2-1)[2.2.2 Second 对象的构造器](#2-2-2)
   - [2.2.3 Second 对象的属性](#2-2-3)
   - [2.2.4 Second 对象的方法](#2-2-4)
     - [2.2.4.1 to_last 方法](#2-2-4-1)

@@ -1,0 +1,19 @@
+{
+  "name": "@jc-marked/docs",
+  "scripts": {
+    "dev": "pnpm gen-locale && vitepress dev .",
+    "gen-locale": "rimraf .vitepress/i18n && tsx .vitepress/build/crowdin-generate.ts",
+    "build": "vitepress build docs",
+    "preview": "vitepress preview docs"
+  },
+  "devDependencies": {
+    "@types/markdown-it": "^12.2.3",
+    "chalk": "^5.2.0",
+    "consola": "^2.15.3",
+    "markdown-it-container": "^3.0.0",
+    "vitepress": "1.0.0-alpha.47"
+  },
+  "dependencies": {
+    "markdown-it": "^13.0.1"
+  }
+}

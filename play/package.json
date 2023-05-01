@@ -1,0 +1,28 @@
+{
+  "name": "@jc-datetime/play",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "cls": "powershell -Command \"cls\"",
+    "excute": "ts-node src/index.ts",
+    "play:node": "nodemon -e ts --watch src --exec  \"pnpm run cls && pnpm run excute\"",
+    "play:browser": "vite --host"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^18.14.1",
+    "nodemon": "^2.0.20",
+    "sass": "^1.58.3",
+    "typescript": "^4.9.5",
+    "vite": "^4.1.0",
+    "vue": "^3.2.45"
+  },
+  "dependencies": {
+    "@jcstdio/jc-utils": "^0.0.8",
+    "consola": "^2.15.3",
+    "jc-datetime": "workspace:*",
+    "ts-node": "^10.9.1"
+  }
+}
