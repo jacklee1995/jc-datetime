@@ -1,6 +1,6 @@
 {
   "name": "jc-datetime",
-  "version": "1.0.11",
+  "version": "1.0.12",
   "description": "A date and time tool.",
   "repository": {
     "type": "git",
@@ -10,7 +10,7 @@
     "dev": "gulp --require @esbuild-kit/cjs-loader",
     "api": "doc-holiday src/**/*"
   },
-  "homepage": "http://thispage.tech:9680/jclee1995/jc-color",
+  "homepage": "http://thispage.tech:9680/jclee1995/jc-datetime",
   "keywords": [
     "date",
     "time",
@@ -46,6 +46,6 @@
     "node": ">= 16"
   },
   "dependencies": {
-    "@jcstdio/jc-utils": "^0.0.12"
+    "@jcstdio/jc-utils": "^0.0.13"
   }
 }
